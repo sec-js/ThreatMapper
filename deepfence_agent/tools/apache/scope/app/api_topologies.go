@@ -747,17 +747,19 @@ func (r *Registry) captureRenderer(rep Reporter, f rendererHandler) CtxHandlerFu
 			http.NotFound(w, req)
 			return
 		}
-		rpt, err := rep.Report(ctx, timestamp)
+		rpts, err := rep.Reports(ctx, timestamp)
 		if err != nil {
 			respondWith(ctx, w, http.StatusInternalServerError, err)
 			return
 		}
 		req.ParseForm()
-		renderer, filter, err := r.RendererForTopology(topologyID, req.Form, rpt)
-		if err != nil {
-			respondWith(ctx, w, http.StatusInternalServerError, err)
-			return
+		for _, rpt := range rpts {
+			renderer, filter, err := r.RendererForTopology(topologyID, req.Form, rpt)
+			if err != nil {
+				respondWith(ctx, w, http.StatusInternalServerError, err)
+				return
+			}
+			f(ctx, renderer, filter, RenderContextForReporter(rep, rpt), w, req)
 		}
-		f(ctx, renderer, filter, RenderContextForReporter(rep, rpt), w, req)
 	}
 }

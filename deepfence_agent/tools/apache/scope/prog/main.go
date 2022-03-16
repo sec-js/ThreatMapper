@@ -496,6 +496,8 @@ func main() {
 		appMain(flags.app)
 	case "probe":
 		probeMain(flags.probe, targets)
+	case "renderer":
+		rendererMain(flags.app)
 	case "version":
 		fmt.Println("Weave Scope version", version)
 	case "help":

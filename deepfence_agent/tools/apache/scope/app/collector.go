@@ -2,8 +2,6 @@ package app
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
-	"github.com/weaveworks/scope/common/xfer"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -11,6 +9,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/sirupsen/logrus"
+	"github.com/weaveworks/scope/common/xfer"
 
 	"context"
 
@@ -32,6 +33,8 @@ const reportQuantisationInterval = 10 * time.Second
 // interface for parts of the app, and several experimental components.
 type Reporter interface {
 	Report(context.Context, time.Time) (report.Report, error)
+	Reports(context.Context, time.Time) ([]report.Report, error)
+	Merge([]report.Report) (*report.Report, error)
 	HasReports(context.Context, time.Time) (bool, error)
 	HasHistoricReports() bool
 	AdminSummary(context.Context, time.Time) (string, error)
@@ -74,6 +77,14 @@ type collector struct {
 	cached     *report.Report
 	merger     Merger
 	waitableCondition
+}
+
+func (c collector) Reports(context.Context, time.Time) ([]report.Report, error) {
+	return nil, nil
+}
+
+func (c collector) Merge([]report.Report) (*report.Report, error) {
+	return nil, nil
 }
 
 type waitableCondition struct {
@@ -250,6 +261,14 @@ func (c StaticCollector) Report(context.Context, time.Time) (report.Report, erro
 	return report.Report(c), nil
 }
 
+func (c StaticCollector) Reports(context.Context, time.Time) ([]report.Report, error) {
+	return nil, nil
+}
+
+func (c StaticCollector) Merge([]report.Report) (*report.Report, error) {
+	return nil, nil
+}
+
 // Close is a no-op for the static collector
 func (c StaticCollector) Close() {}
 
@@ -374,9 +393,15 @@ type AsyncCollectorCache struct {
 	cached *report.Report
 }
 
+type AsyncCollectorCaches struct {
+	mtx    sync.RWMutex
+	cached []report.Report
+}
+
 type AsyncCollector struct {
 	reports       AsyncCollectorReports
 	cached        AsyncCollectorCache
+	cacheds        AsyncCollectorCaches
 	window        time.Duration
 	merger        Merger
 	reportChannel chan rptStruct
@@ -390,6 +415,22 @@ func (c *AsyncCollector) Report(_ context.Context, timestamp time.Time) (report.
 		return report.MakeReport(), nil
 	}
 	return *c.cached.cached, nil
+
+}
+
+func (c *AsyncCollector) Reports(_ context.Context, timestamp time.Time) ([]report.Report, error) {
+	c.cacheds.mtx.RLock()
+	defer c.cacheds.mtx.RUnlock()
+	if c.cacheds.cached == nil {
+		return []report.Report{report.MakeReport()}, nil
+	}
+	return c.cacheds.cached, nil
+
+}
+
+func (c *AsyncCollector) Merge(tmpReports []report.Report) (*report.Report, error) {
+	rpt := c.merger.Merge(tmpReports)
+	return &rpt, nil
 
 }
 
@@ -417,17 +458,18 @@ func (c *AsyncCollector) cleanUpAndMerge() {
 			for _, reports := range c.reports.reports {
 				tmpReports = append(tmpReports, reports...)
 			}
-			rpt := c.merger.Merge(tmpReports)
+			//rpt := c.merger.Merge(tmpReports)
 			c.reports.mtx.Unlock()
 
-			c.cached.mtx.Lock()
-			c.cached.cached = &rpt
-			c.cached.mtx.Unlock()
+			c.cacheds.mtx.Lock()
+			c.cacheds.cached = tmpReports
+			c.cacheds.mtx.Unlock()
 		}
 	}
 }
 
 func (c *AsyncCollector) channelListener() {
+	//redisPool, _ := newRedisPool()
 	for {
 		select {
 		case msg, ok := <-c.reportChannel:
@@ -442,6 +484,11 @@ func (c *AsyncCollector) channelListener() {
 					c.reports.timestamps[msg.probeId] = []time.Time{msg.ts}
 				}
 				c.reports.mtx.Unlock()
+				//redisConn := redisPool.Get()
+				//_, err := redisConn.Do("PUBLISH", msg.probeId, msg.rpt)
+				//if err != nil {
+				//	logrus.Error(err.Error())
+				//}
 			} else {
 				logrus.Error("reportChannel closed!")
 			}
