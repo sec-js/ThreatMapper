@@ -13,7 +13,7 @@ from utils.resource import get_nodes_list, get_default_params
 
 header_fields = {
     'ALERT_TYPE_META_SUB_FIELD': ['cloud_provider', 'name', 'private_ip', 'public_ip'],
-    CVE_ES_TYPE: ['@timestamp', 'cve_attack_vector', 'cve_caused_by_package', 'cve_container_image', 'scan_id',
+    CVE_ES_TYPE: ['@timestamp', 'cve_attack_vector', 'cve_caused_by_package','cve_caused_by_package_path', 'cve_container_image', 'scan_id',
                   'cve_container_image_id', 'cve_cvss_score', 'cve_description', 'cve_fixed_in', 'cve_id',
                   'cve_link', 'cve_severity', 'cve_overall_score', 'cve_type', 'host', 'host_name', 'masked'],
     "secret-scan-source": ['Match.full_filename', 'Match.matched_content', 'Rule.name', 'Rule.part', 'Severity.level',
