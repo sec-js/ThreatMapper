@@ -1,8 +1,12 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {Route, Link, Redirect, withRouter} from 'react-router-dom';
 // import ReactTooltip from 'react-tooltip';
+import Tippy from '@tippyjs/react';
 import { DfTableV2 } from '../common/df-table-v2';
+// import ComplianceSummary from './compliance-summary';
+import MORE_IMAGE from '../../../images/more.svg';
 import {
   getGlobalSettingsAction,
   addGlobalSettingsAction,
@@ -10,10 +14,9 @@ import {
   hideModal,
 } from '../../actions/app-actions';
 
-export const ComplianceTable = () => {
+export const ComplianceTable = withRouter((match) => {
   const dispatch = useDispatch();
-  const [redirect, setRedirect] = useState(false);
-  const [link, setLink] = useState('');
+
   useEffect(() => {
     dispatch(getGlobalSettingsAction());
   }, []);
@@ -32,9 +35,28 @@ export const ComplianceTable = () => {
   };
 
   const rowClickHandler = row => {
-    console.log('Row Clicked');
-    setRedirect(true);
-    setLink(`/compliance/details/${encodeURIComponent()}`);
+    console.log(match);
+    console.log('Row Clicked'. props);
+
+    // return (
+    //   <Route
+    //     exact
+    //     path={`${match.match.path}/topology`}
+    //     render={() => (
+    //       <ComplianceSummary
+    //         // to={`${match.url}/topology`}
+    //         />
+    //     )}
+    //   />
+    // );
+    // // return (
+    // //   <div>
+    // //     <ComplianceSummary />
+    // //   </div>
+    // // );
+
+    // setRedirect(true);
+    // // setLink(`/compliance/details/${encodeURIComponent()}`);
   };
 
   const renderFormModal = ({ row }) => {
@@ -122,30 +144,71 @@ export const ComplianceTable = () => {
               <div style={{ textAlign: 'centre' }}>{row.value}</div>
             ),
           },
+          // {
+          //   Header: 'Action',
+          //   accessor: 'id',
+          //   disableSortBy: true,
+          //   Cell: row => (
+          //     <div className="action-control">
+          //       <i
+          //         className="fa fa-pencil"
+          //         style={{ cursor: 'pointer', marginRight: '10px' }}
+          //         onClick={() => handleEditFile(row)}
+          //       />
+          //       <i
+          //         className="fa fa-trash-o"
+          //         style={{ color: 'red', cursor: 'pointer' }}
+          //         onClick={() => handleDeleteDialog(row.value)}
+          //         aria-hidden="true"
+          //       />
+          //     </div>
+          //   ),
+          //   style: { textAlign: 'centre' },
+          // },
           {
-            Header: 'Action',
+            Header: '',
+            width: 60,
             accessor: 'id',
             disableSortBy: true,
-            Cell: row => (
-              <div className="action-control">
-                <i
-                  className="fa fa-pencil"
-                  style={{ cursor: 'pointer', marginRight: '10px' }}
-                  onClick={() => handleEditFile(row)}
+            Cell: cell => (
+              <Tippy
+                arrow
+                interactive
+                trigger="click"
+                hideOnClick
+                placement="bottom"
+                zIndex={1}
+                allowHTML
+                content={
+                  <div className="table-row-actions-popup">
+                    <i
+                      className="fa fa-trash-o"
+                      style={{ color: 'red', cursor: 'pointer' }}
+                      onClick={() => handleDeleteDialog(row.value)}
+                      aria-hidden="true"
+                    />
+                    <i
+                      className="fa fa-pencil"
+                      style={{ cursor: 'pointer', marginRight: '10px' }}
+                      onClick={() => handleEditFile(row)}
+                    />
+                  </div>
+                }
+              >
+                <img
+                  src={MORE_IMAGE}
+                  alt="more"
+                  className="table-row-actions-target"
+                  onClick={e => {
+                    e.stopPropagation();
+                  }}
                 />
-                <i
-                  className="fa fa-trash-o"
-                  style={{ color: 'red', cursor: 'pointer' }}
-                  onClick={() => handleDeleteDialog(row.value)}
-                  aria-hidden="true"
-                />
-              </div>
+              </Tippy>
             ),
-            style: { textAlign: 'centre' },
           },
         ]}
         // enableSorting
       />
     </div>
   );
-};
+});
