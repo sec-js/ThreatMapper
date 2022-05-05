@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Select from 'react-select';
+import {ComplianceTable} from '../compliance-table';
 import { setGraphView } from '../../../actions/app-actions';
 
 const themeCb = theme => ({
@@ -105,7 +106,7 @@ module "deepfence-compliance-single-subscription" {
 
   management_console_url = "https://dev.deepfence.com"
   api_key = ""
-} 
+}
 `}</pre>
         </div>
       </div>
@@ -124,6 +125,7 @@ module "deepfence-compliance-single-subscription" {
           </pre>
         </div>
       </div>
+      <ComplianceTable />
     </>
   );
 };

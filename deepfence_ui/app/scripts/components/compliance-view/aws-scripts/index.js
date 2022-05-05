@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Select from 'react-select';
+import {ComplianceTable} from '../compliance-table';
 
 const themeCb = theme => ({
   ...theme,
@@ -126,6 +127,7 @@ module "deepfence-compliance" {
           </pre>
         </div>
       </div>
+      < ComplianceTable />
     </>
   );
 };

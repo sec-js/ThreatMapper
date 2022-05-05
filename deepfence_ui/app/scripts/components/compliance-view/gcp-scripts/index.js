@@ -2,6 +2,8 @@ import React from 'react';
 
 import Select from 'react-select';
 
+import {ComplianceTable} from '../compliance-table';
+
 const themeCb = theme => ({
   ...theme,
   borderRadius: 5,
@@ -37,7 +39,7 @@ const styles = {
 };
 
 export const GcpTerraFormScript = (props) => {
-    const { setView } = props; 
+    const { setView } = props;
   return (
     <>
      <div className="btn-wrapper" style={{justifyContent: 'left'}}>
@@ -57,7 +59,7 @@ export const GcpTerraFormScript = (props) => {
       </div>
       <h6 style={{ color: 'white', marginTop: '20px' }}> Single subscription </h6>
       <div style={{ display: 'flex', marginTop: '40px' }}>
-        <span style={{ marginTop: '4px' }}> Project Id: </span> 
+        <span style={{ marginTop: '4px' }}> Project Id: </span>
         <input type="text" placeholder="Project Id" />
         <div style={{ marginLeft: '10px' }}>
           <Select
@@ -99,7 +101,7 @@ module "deepfence-compliance-single-project" {
 
   management_console_url = "https://dev.deepfence.com"
   api_key = ""
-} 
+}
 `}</pre>
         </div>
       </div>
@@ -118,6 +120,7 @@ module "deepfence-compliance-single-project" {
           </pre>
         </div>
       </div>
+      <ComplianceTable/>
     </>
   );
 };
