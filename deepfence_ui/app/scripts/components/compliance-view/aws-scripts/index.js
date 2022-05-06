@@ -1,8 +1,9 @@
+/* eslint-disable import/no-cycle */
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 import Select from 'react-select';
-import { ComplianceTable } from '../compliance-table';
+import ComplianceTable from '../compliance-table';
 
 const themeCb = theme => ({
   ...theme,

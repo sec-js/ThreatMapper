@@ -158,3 +158,34 @@ export const CVE_SCAN_TYPE_OPTIONS = [
     label: 'Dotnet',
   },
 ];
+
+export const COMPLIANCE_SCAN_MENU = [
+  {
+    code: 'standard',
+    label: 'System Hardening',
+  },
+  {
+    code: 'cis',
+    label: 'CIS',
+  },
+  {
+    code: 'nist_master',
+    label: 'NIST Kube Master',
+  },
+  {
+    code: 'nist_slave',
+    label: 'NIST Kube Slave',
+  },
+  {
+    code: 'pcidss',
+    label: 'PCI-DSS',
+  },
+  {
+    code: 'hipaa',
+    label: 'HIPAA',
+  },
+  {
+    code: 'mission_critical_classified',
+    label: 'NIST Mission Critical',
+  },
+];
