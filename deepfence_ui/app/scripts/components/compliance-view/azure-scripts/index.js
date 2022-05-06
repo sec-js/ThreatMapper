@@ -1,7 +1,8 @@
+/* eslint-disable import/no-cycle */
 import React from 'react';
 
 import Select from 'react-select';
-import {ComplianceTable} from '../compliance-table';
+import ComplianceTable from '../compliance-table';
 import { setGraphView } from '../../../actions/app-actions';
 
 const themeCb = theme => ({

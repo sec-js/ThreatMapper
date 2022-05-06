@@ -7,6 +7,8 @@ import Tippy from '@tippyjs/react';
 import { DfTableV2 } from '../common/df-table-v2';
 // import ComplianceSummary from './compliance-summary';
 import MORE_IMAGE from '../../../images/more.svg';
+import { ComplianceActionModal } from './compliance-action-modal';
+import injectModalTrigger from '../common/generic-modal/modal-trigger-hoc';
 import {
   getGlobalSettingsAction,
   addGlobalSettingsAction,
@@ -14,10 +16,13 @@ import {
   hideModal,
 } from '../../actions/app-actions';
 
-export const ComplianceTable = withRouter((match) => {
+const ComplianceTable = (props) => {
   const dispatch = useDispatch();
 
+  const {triggerModal, showModal} = props;
+
   useEffect(() => {
+    console.log(props);
     dispatch(getGlobalSettingsAction());
   }, []);
 
@@ -35,7 +40,7 @@ export const ComplianceTable = withRouter((match) => {
   };
 
   const rowClickHandler = row => {
-    console.log(match);
+    // console.log(match);
     console.log('Row Clicked'. props);
 
     // return (
@@ -58,6 +63,41 @@ export const ComplianceTable = withRouter((match) => {
     // setRedirect(true);
     // // setLink(`/compliance/details/${encodeURIComponent()}`);
   };
+
+
+
+  const triggerComplianceScanModal = () => {
+    const isCVE = false;
+    const modalProps = {
+      title: 'Compliance Scan',
+      modalContent: renderModalContent,
+      modalContentProps: {
+        // selectedDocIndex,
+        isCVE,
+      },
+      contentStyles: {
+        width: '400px',
+      },
+    };
+    return triggerModal('GENERIC_MODAL', modalProps);
+  };
+
+
+  const renderModalContent = props => {
+    // const { selectedDocIndex = {}, isCVE = false } = props;
+    const { isCVE = false } = props;
+
+    const resetSelection = false;
+    return (
+      <ComplianceActionModal
+        // selectedDocIndex={selectedDocIndex} // ['cos-vm:<host>',]
+        resetSelection={resetSelection}
+        isCVE={isCVE}
+      />
+    );
+  };
+
+
 
   const renderFormModal = ({ row }) => {
     let domainName = row.row.original.value;
@@ -171,39 +211,52 @@ export const ComplianceTable = withRouter((match) => {
             accessor: 'id',
             disableSortBy: true,
             Cell: cell => (
-              <Tippy
-                arrow
-                interactive
-                trigger="click"
-                hideOnClick
-                placement="bottom"
-                zIndex={1}
-                allowHTML
-                content={
-                  <div className="table-row-actions-popup">
-                    <i
-                      className="fa fa-trash-o"
-                      style={{ color: 'red', cursor: 'pointer' }}
-                      onClick={() => handleDeleteDialog(row.value)}
-                      aria-hidden="true"
-                    />
-                    <i
-                      className="fa fa-pencil"
-                      style={{ cursor: 'pointer', marginRight: '10px' }}
-                      onClick={() => handleEditFile(row)}
-                    />
-                  </div>
-                }
-              >
-                <img
-                  src={MORE_IMAGE}
-                  alt="more"
-                  className="table-row-actions-target"
-                  onClick={e => {
-                    e.stopPropagation();
-                  }}
-                />
-              </Tippy>
+              <div className='row-action-menu'>
+                <Tippy
+                  arrow
+                  interactive
+                  trigger='click'
+                  hideOnClick
+                  placement='bottom'
+                  zIndex={1}
+                  allowHTML
+                  content={(
+                    <div className="row-action-dropdown-wrapper">
+                      <div className="row-action-dropdown-item" onClick={() => {
+                        // e.stopPropagation();
+                        triggerComplianceScanModal();
+                      }}>
+                        <div className="row-action-item-icon">
+                          <i className="fa fa-list" aria-hidden="true" />
+                        </div>
+                        <div className="row-action-item-text">
+                          Start Scan
+                        </div>
+                      </div>
+                      <div className="row-action-dropdown-item" onClick={ev => {
+                        ev.stopPropagation();
+                        this.handleDeleteDialogScans(cell.value);
+                      }}>
+                        <div className="row-action-item-icon">
+                          <i className="fa fa-trash-o" aria-hidden="true" style={{ color: 'red' }} />
+                        </div>
+                        <div className="row-action-item-text">
+                          Delete
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                >
+                  <img
+                    src={MORE_IMAGE}
+                    alt="more"
+                    className="table-row-actions-target"
+                    onClick={e => {
+                      e.stopPropagation();
+                    }}
+                  />
+                </Tippy>
+              </div>
             ),
           },
         ]}
@@ -211,4 +264,6 @@ export const ComplianceTable = withRouter((match) => {
       />
     </div>
   );
-});
+};
+
+export default injectModalTrigger(ComplianceTable);
