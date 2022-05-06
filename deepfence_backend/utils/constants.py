@@ -152,6 +152,7 @@ PACKAGE_SCANNER_REGISTRY_API_URL = "http://deepfence-package-scanner:8005/regist
 
 CUSTOMER_UNIQUE_ID = os.getenv('CUSTOMER_UNIQUE_ID', None)
 CVE_INDEX = "cve"
+CLOUD_COMPLIANCE_SCAN = "cloud-compliance-scan"
 CVE_SCAN_LOGS_INDEX = "cve-scan"
 SBOM_INDEX = "sbom-cve-scan"
 SBOM_ARTIFACT_INDEX = "sbom-artifact"
@@ -178,7 +179,7 @@ if CUSTOMER_UNIQUE_ID:
     REPORT_INDEX += f"-{CUSTOMER_UNIQUE_ID}"
 
 ALL_INDICES = [
-    CVE_INDEX, CVE_SCAN_LOGS_INDEX
+    CVE_INDEX, CVE_SCAN_LOGS_INDEX, CLOUD_COMPLIANCE_SCAN
 ]
 CVE_SCAN_TYPES = ["base", "java", "python", "ruby", "php", "javascript", "rust", "golang", "dotnet"]
 AES_SETTING_KEY = "aes_secret"

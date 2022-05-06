@@ -11,7 +11,7 @@ from config.error_handlers import handle_invalid_usage
 from config.extensions import cors, jwt, db, migrate
 from utils.constants import API_URL_PREFIX
 from api import user_api, common_api, vulnerability_api, resource_api, reports_api, \
-    setting_api, internal_api, secret_scan_api, license_api
+    setting_api, internal_api, secret_scan_api, license_api,cloud_compliance_api
 
 
 def create_app(config_object):
@@ -55,6 +55,7 @@ def create_app(config_object):
 def register_blueprints(app):
     app.register_blueprint(user_api.user_api, url_prefix=API_URL_PREFIX)
     app.register_blueprint(common_api.common_api, url_prefix=API_URL_PREFIX)
+    app.register_blueprint(cloud_compliance_api.cloud_compliance_api, url_prefix=API_URL_PREFIX)
     app.register_blueprint(vulnerability_api.vulnerability_api, url_prefix=API_URL_PREFIX)
     app.register_blueprint(resource_api.resource_api, url_prefix=API_URL_PREFIX)
     app.register_blueprint(reports_api.reports_api, url_prefix=API_URL_PREFIX)
