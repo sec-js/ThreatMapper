@@ -1,8 +1,8 @@
 import React from 'react';
 
 import Select from 'react-select';
+import { withRouter } from 'react-router-dom';
 import {ComplianceTable} from '../compliance-table';
-import { setGraphView } from '../../../actions/app-actions';
 
 const themeCb = theme => ({
   ...theme,
@@ -38,13 +38,12 @@ const styles = {
   }),
 };
 
-export const AzureTerraFormScript = props => {
-  const { setView } = props;
+export const AzureTerraFormScript = withRouter((props) => {
 
   return (
     <>
       <div className="btn-wrapper" style={{ justifyContent: 'left' }}>
-        <div className="go-back-btn" onClick={() => setView()}>
+        <div className="go-back-btn" onClick={() => props.history.push('/compliance')}>
           <i className="fa fa-arrow-left" aria-hidden="true" />{' '}
           <span
             style={{ paddingLeft: '5px', color: '#0276C9', fontSize: '15px' }}
@@ -128,4 +127,4 @@ module "deepfence-compliance-single-subscription" {
       <ComplianceTable />
     </>
   );
-};
+});

@@ -1,7 +1,8 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 import Select from 'react-select';
-import {ComplianceTable} from '../compliance-table';
+import { ComplianceTable } from '../compliance-table';
 
 const themeCb = theme => ({
   ...theme,
@@ -37,12 +38,11 @@ const styles = {
   }),
 };
 
-export const AwsTerraFormScript = props => {
-  const { setView } = props;
+export const AwsTerraFormScript = withRouter((props) => {
   return (
     <>
       <div className="btn-wrapper" style={{ justifyContent: 'left' }}>
-        <div className="go-back-btn" onClick={() => setView()}>
+        <div className="go-back-btn" onClick={() => props.history.push('/compliance')}>
           <i className="fa fa-arrow-left" aria-hidden="true" />{' '}
           <span
             style={{ paddingLeft: '5px', color: '#0276C9', fontSize: '15px' }}
@@ -76,7 +76,7 @@ export const AwsTerraFormScript = props => {
             // value={options.value}
             classNamePrefix="select"
             className="select-filter"
-            // onChange={addRegion}
+          // onChange={addRegion}
           />
         </div>
       </div>
@@ -130,4 +130,4 @@ module "deepfence-compliance" {
       < ComplianceTable />
     </>
   );
-};
+});
