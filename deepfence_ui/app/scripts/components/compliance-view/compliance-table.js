@@ -153,6 +153,9 @@ const ComplianceTable = (props) => {
 
   return (
     <div style={{ marginLeft: '-25px', marginTop: '-40px'}}>
+        <Link to="/complaince/aws/123/standard">
+          TEST
+        </Link>
       <DfTableV2
         data={settingsList}
         onRowClick={row => rowClickHandler(row)}

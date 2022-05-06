@@ -1,9 +1,10 @@
 /* eslint-disable import/no-cycle */
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 
 import Select from 'react-select';
 import ComplianceTable from '../compliance-table';
+import ComplianceSummary from '../compliance-summary';
 
 const themeCb = theme => ({
   ...theme,
@@ -129,6 +130,11 @@ module "deepfence-compliance" {
         </div>
       </div>
       < ComplianceTable />
+      <Route
+        exact
+        path={`${props.match.path}/:id`}
+        render={() => { console.log('TEST'); return <ComplianceSummary />}}
+      />
     </>
   );
 });
