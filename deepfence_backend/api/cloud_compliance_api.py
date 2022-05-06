@@ -8,30 +8,19 @@ from flask import current_app as app
 from flask_jwt_extended import jwt_required
 import networkx as nx
 from utils.response import set_response
-from utils.helper import split_list_into_chunks, get_deepfence_logs, get_process_ids_for_pod, md5_hash
 from utils.esconn import ESConn, GroupByParams
 from utils.decorators import user_permission, non_read_only_user, admin_user_only
 from collections import defaultdict
-from utils.constants import USER_ROLES, TIME_UNIT_MAPPING, CVE_INDEX, ALL_INDICES, CLOUD_COMPLIANCE_SCAN, NODE_TYPE_CONTAINER, NODE_TYPE_CONTAINER_IMAGE
-from utils.scope import fetch_topology_data
-from utils.node_helper import determine_node_status
-from datetime import datetime, timedelta
-from utils.helper import is_network_attack_vector, get_topology_network_graph, modify_es_index
-from utils.node_utils import NodeUtils
+from utils.constants import USER_ROLES, TIME_UNIT_MAPPING, CVE_INDEX, ALL_INDICES, CLOUD_COMPLIANCE_SCAN, NODE_TYPE_CONTAINER, NODE_TYPE_CONTAINER_IMAGE, ES_TERMS_AGGR_SIZE, COMPLIANCE_CHECK_TYPES
 from flask.views import MethodView
 from utils.custom_exception import InvalidUsage, InternalError, DFError, NotFound
 from models.node_tags import NodeTags
-from models.container_image_registry import RegistryCredential
-from models.user import User, Role
-from models.user_activity_log import UserActivityLog
-from models.email_configuration import EmailConfiguration
-from config.redisconfig import redis
 from utils.es_query_utils import get_latest_cve_scan_id
 import json
 from flask_jwt_extended import get_jwt_identity
-from utils.resource import encrypt_cloud_credential
-from resource_models.node import Node
 from utils.resource import get_nodes_list, get_default_params
+import urllib.parse
+from utils.helper import modify_es_index
 
 cloud_compliance_api = Blueprint("cloud_compliance_api", __name__)
 
@@ -184,7 +173,68 @@ def search():
     search_response["total"] = search_response.get("total", {}).get("value", 0)
     return set_response(data=search_response)
     
+@cloud_compliance_api.route("/compliance/<compliance_check_type>/test_status_report", methods=["GET", "POST"])
+# @jwt_required()
+# @valid_license_required
+def compliance_test_status_report(compliance_check_type):
+    if not compliance_check_type or compliance_check_type not in COMPLIANCE_CHECK_TYPES:
+        raise InvalidUsage("Invalid compliance_check_type: {0}".format(compliance_check_type))
 
+    number = request.args.get("number")
+    time_unit = request.args.get("time_unit")
+
+    if number:
+        try:
+            number = int(number)
+        except ValueError:
+            raise InvalidUsage("Number should be an integer value.")
+
+    if bool(number is not None) ^ bool(time_unit):
+        raise InvalidUsage("Require both number and time_unit or ignore both of them.")
+
+    if time_unit and time_unit not in TIME_UNIT_MAPPING.keys():
+        raise InvalidUsage("time_unit should be one of these, month/day/hour/minute")
+
+    lucene_query_string = request.args.get("lucene_query")
+    if lucene_query_string:
+        lucene_query_string = urllib.parse.unquote(lucene_query_string)
+    filters = {}
+    if request.is_json:
+        if type(request.json) != dict:
+            raise InvalidUsage("Request data invalid")
+        filters = request.json.get("filters", {})
+    filters["compliance_check_type"] = compliance_check_type
+    aggs = {
+        "scan_id": {
+            "terms": {
+                "field": "scan_id.keyword",
+                "size": ES_TERMS_AGGR_SIZE
+            },
+            "aggs": {
+                "status": {
+                    "terms": {
+                        "field": "status.keyword",
+                        "size": 25
+                    }
+                }
+            }
+        }
+    }
+    aggs_response = ESConn.aggregation_helper(
+        CLOUD_COMPLIANCE_SCAN,
+        filters,
+        aggs,
+        number,
+        TIME_UNIT_MAPPING.get(time_unit),
+        lucene_query_string
+    )
+    response = defaultdict(int)
+    print(aggs_response)
+    if "aggregations" in aggs_response:
+        for scan_id_aggr in aggs_response["aggregations"]["scan_id"]["buckets"]:
+            for status_aggr in scan_id_aggr["status"]["buckets"]:
+                response[status_aggr["key"]] += status_aggr["doc_count"]
+    return set_response(data=response)
 
 def filter_node_for_compliance(node_filters):
     host_names = []
