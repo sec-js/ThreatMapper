@@ -49,7 +49,7 @@ const testValueConfig = [
 //   />
 // );
 
-class StandardSecSummary extends React.PureComponent {
+class PCISummary extends React.PureComponent {
   // handleViewRules({
   //   checkType,
   //   label,
@@ -69,7 +69,6 @@ class StandardSecSummary extends React.PureComponent {
   // }
 
   render() {
-    console.log('StandardSecSummary props: ', this.props);
     const {
       location: urlLocation,
     } = this.props;
@@ -88,8 +87,8 @@ class StandardSecSummary extends React.PureComponent {
                 e.preventDefault();
                 e.stopPropagation();
                 this.handleViewRules({
-                  checkType: 'standard',
-                  label: 'System Hardening',
+                  checkType: 'hipaa',
+                  label: 'HIPAA',
                 });
               }}
             >
@@ -99,7 +98,7 @@ class StandardSecSummary extends React.PureComponent {
           <div className="report">
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
-                checkType="standard"
+                checkType="hipaa"
               />
             </div>
           </div>
@@ -107,7 +106,7 @@ class StandardSecSummary extends React.PureComponent {
         <div className="chart-wrapper table-wrapper">
           <div className="table relative">
             <HostReportContainer
-              checkType="standard"
+              checkType="hipaa"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}
             />
@@ -118,4 +117,4 @@ class StandardSecSummary extends React.PureComponent {
   }
 }
 
-export default injectModalTrigger(StandardSecSummary);
+export default injectModalTrigger(PCISummary);

@@ -49,7 +49,7 @@ const testValueConfig = [
 //   />
 // );
 
-class StandardSecSummary extends React.PureComponent {
+class MissionCriticalSummary extends React.PureComponent {
   // handleViewRules({
   //   checkType,
   //   label,
@@ -57,7 +57,6 @@ class StandardSecSummary extends React.PureComponent {
   //   const {
   //     triggerModal,
   //   } = this.props;
-
   //   triggerModal('GENERIC_MODAL', {
   //     title: `Compliance Controls (${label})`,
   //     modalContent: () => renderModalContent(checkType),
@@ -69,7 +68,6 @@ class StandardSecSummary extends React.PureComponent {
   // }
 
   render() {
-    console.log('StandardSecSummary props: ', this.props);
     const {
       location: urlLocation,
     } = this.props;
@@ -88,8 +86,8 @@ class StandardSecSummary extends React.PureComponent {
                 e.preventDefault();
                 e.stopPropagation();
                 this.handleViewRules({
-                  checkType: 'standard',
-                  label: 'System Hardening',
+                  checkType: 'mission_critical_classified',
+                  label: 'Mission Critical Classified'
                 });
               }}
             >
@@ -99,7 +97,7 @@ class StandardSecSummary extends React.PureComponent {
           <div className="report">
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
-                checkType="standard"
+                checkType="mission_critical_classified"
               />
             </div>
           </div>
@@ -107,7 +105,7 @@ class StandardSecSummary extends React.PureComponent {
         <div className="chart-wrapper table-wrapper">
           <div className="table relative">
             <HostReportContainer
-              checkType="standard"
+              checkType="mission_critical_classified"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}
             />
@@ -118,4 +116,4 @@ class StandardSecSummary extends React.PureComponent {
   }
 }
 
-export default injectModalTrigger(StandardSecSummary);
+export default injectModalTrigger(MissionCriticalSummary);

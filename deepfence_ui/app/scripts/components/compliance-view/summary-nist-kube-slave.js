@@ -14,32 +14,8 @@ const testValueConfig = [
     value: 'fail',
   },
   {
-    display: 'Not Applicable',
-    value: 'notapplicable',
-  },
-  {
-    display: 'Not Selected',
-    value: 'notselected',
-  },
-  {
-    display: 'Unknown',
-    value: 'unknown',
-  },
-  {
-    display: 'Not Checked',
-    value: 'notchecked',
-  },
-  {
-    display: 'Informational',
-    value: 'informational',
-  },
-  {
-    display: 'Error',
-    value: 'error',
-  },
-  {
-    display: 'Fixed',
-    value: 'fixed',
+    display: 'Warn',
+    value: 'warn',
   },
 ];
 
@@ -49,7 +25,7 @@ const testValueConfig = [
 //   />
 // );
 
-class StandardSecSummary extends React.PureComponent {
+class NISTKubeSlaveSummary extends React.PureComponent {
   // handleViewRules({
   //   checkType,
   //   label,
@@ -69,7 +45,6 @@ class StandardSecSummary extends React.PureComponent {
   // }
 
   render() {
-    console.log('StandardSecSummary props: ', this.props);
     const {
       location: urlLocation,
     } = this.props;
@@ -88,8 +63,8 @@ class StandardSecSummary extends React.PureComponent {
                 e.preventDefault();
                 e.stopPropagation();
                 this.handleViewRules({
-                  checkType: 'standard',
-                  label: 'System Hardening',
+                  checkType: 'nist_slave',
+                  label: 'NIST slave',
                 });
               }}
             >
@@ -99,7 +74,7 @@ class StandardSecSummary extends React.PureComponent {
           <div className="report">
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
-                checkType="standard"
+                checkType="nist_slave"
               />
             </div>
           </div>
@@ -107,7 +82,7 @@ class StandardSecSummary extends React.PureComponent {
         <div className="chart-wrapper table-wrapper">
           <div className="table relative">
             <HostReportContainer
-              checkType="standard"
+              checkType="nist_slave"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}
             />
@@ -117,5 +92,4 @@ class StandardSecSummary extends React.PureComponent {
     );
   }
 }
-
-export default injectModalTrigger(StandardSecSummary);
+export default injectModalTrigger(NISTKubeSlaveSummary);

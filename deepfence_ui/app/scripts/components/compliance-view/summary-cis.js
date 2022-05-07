@@ -10,36 +10,16 @@ const testValueConfig = [
     value: 'pass',
   },
   {
-    display: 'Fail',
-    value: 'fail',
+    display: 'Warn',
+    value: 'warn',
   },
   {
-    display: 'Not Applicable',
-    value: 'notapplicable',
+    display: 'Info',
+    value: 'info',
   },
   {
-    display: 'Not Selected',
-    value: 'notselected',
-  },
-  {
-    display: 'Unknown',
-    value: 'unknown',
-  },
-  {
-    display: 'Not Checked',
-    value: 'notchecked',
-  },
-  {
-    display: 'Informational',
-    value: 'informational',
-  },
-  {
-    display: 'Error',
-    value: 'error',
-  },
-  {
-    display: 'Fixed',
-    value: 'fixed',
+    display: 'Note',
+    value: 'note',
   },
 ];
 
@@ -49,7 +29,12 @@ const testValueConfig = [
 //   />
 // );
 
-class StandardSecSummary extends React.PureComponent {
+class CISSummary extends React.PureComponent {
+  // constructor(props) {
+  //   super(props);
+  //   this.handleViewRules = this.handleViewRules.bind(this);
+  // }
+
   // handleViewRules({
   //   checkType,
   //   label,
@@ -69,7 +54,6 @@ class StandardSecSummary extends React.PureComponent {
   // }
 
   render() {
-    console.log('StandardSecSummary props: ', this.props);
     const {
       location: urlLocation,
     } = this.props;
@@ -88,8 +72,8 @@ class StandardSecSummary extends React.PureComponent {
                 e.preventDefault();
                 e.stopPropagation();
                 this.handleViewRules({
-                  checkType: 'standard',
-                  label: 'System Hardening',
+                  checkType: 'cis',
+                  label: 'CIS',
                 });
               }}
             >
@@ -99,15 +83,15 @@ class StandardSecSummary extends React.PureComponent {
           <div className="report">
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
-                checkType="standard"
+                checkType="cis"
               />
             </div>
           </div>
         </div>
         <div className="chart-wrapper table-wrapper">
-          <div className="table relative">
+          <div className="table relative table-compliance-cis">
             <HostReportContainer
-              checkType="standard"
+              checkType="cis"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}
             />
@@ -118,4 +102,4 @@ class StandardSecSummary extends React.PureComponent {
   }
 }
 
-export default injectModalTrigger(StandardSecSummary);
+export default injectModalTrigger(CISSummary);

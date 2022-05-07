@@ -5,7 +5,6 @@ import {Route, Link, Redirect, withRouter} from 'react-router-dom';
 // import ReactTooltip from 'react-tooltip';
 import Tippy from '@tippyjs/react';
 import { DfTableV2 } from '../common/df-table-v2';
-// import ComplianceSummary from './compliance-summary';
 import MORE_IMAGE from '../../../images/more.svg';
 import { ComplianceActionModal } from './compliance-action-modal';
 import injectModalTrigger from '../common/generic-modal/modal-trigger-hoc';
@@ -16,7 +15,7 @@ import {
   hideModal,
 } from '../../actions/app-actions';
 
-const ComplianceTable = (props) => {
+const ComplianceTable = withRouter((props) => {
   const dispatch = useDispatch();
 
   const {triggerModal, showModal} = props;
@@ -40,28 +39,7 @@ const ComplianceTable = (props) => {
   };
 
   const rowClickHandler = row => {
-    // console.log(match);
-    console.log('Row Clicked'. props);
-
-    // return (
-    //   <Route
-    //     exact
-    //     path={`${match.match.path}/topology`}
-    //     render={() => (
-    //       <ComplianceSummary
-    //         // to={`${match.url}/topology`}
-    //         />
-    //     )}
-    //   />
-    // );
-    // // return (
-    // //   <div>
-    // //     <ComplianceSummary />
-    // //   </div>
-    // // );
-
-    // setRedirect(true);
-    // // setLink(`/compliance/details/${encodeURIComponent()}`);
+    props.history.push(`/compliance/aws/123/standard`);
   };
 
 
@@ -153,9 +131,6 @@ const ComplianceTable = (props) => {
 
   return (
     <div style={{ marginLeft: '-25px', marginTop: '-40px'}}>
-        <Link to="/complaince/aws/123/standard">
-          TEST
-        </Link>
       <DfTableV2
         data={settingsList}
         onRowClick={row => rowClickHandler(row)}
@@ -267,6 +242,6 @@ const ComplianceTable = (props) => {
       />
     </div>
   );
-};
+});
 
 export default injectModalTrigger(ComplianceTable);

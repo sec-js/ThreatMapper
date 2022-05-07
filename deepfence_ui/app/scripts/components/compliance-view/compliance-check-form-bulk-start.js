@@ -4,10 +4,41 @@ import {connect} from 'react-redux';
 import HorizontalLoader from '../common/app-loader/horizontal-dots-loader';
 import {replaceWithDFKeyword} from '../../utils/string-utils';
 // eslint-disable-next-line import/no-cycle
-import {COMPLIANCE_SCAN_MENU} from '../../constants/menu-collection';
 import {
   clearScanContainerImageRegistryAction,
 } from '../../actions/app-actions';
+
+const COMPLIANCE_SCAN_MENU = [
+  {
+    code: 'standard',
+    label: 'System Hardening',
+  },
+  {
+    code: 'cis',
+    label: 'CIS',
+  },
+  {
+    code: 'nist_master',
+    label: 'NIST Kube Master',
+  },
+  {
+    code: 'nist_slave',
+    label: 'NIST Kube Slave',
+  },
+  {
+    code: 'pcidss',
+    label: 'PCI-DSS',
+  },
+  {
+    code: 'hipaa',
+    label: 'HIPAA',
+  },
+  {
+    code: 'mission_critical_classified',
+    label: 'NIST Mission Critical',
+  },
+];
+
 
 const validate = (valuesIm) => {
   const errors = {};

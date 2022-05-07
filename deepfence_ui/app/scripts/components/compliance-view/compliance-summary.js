@@ -17,7 +17,7 @@ import HeaderView from '../common/header-view/header-view';
 import { ADMIN_SIDE_NAV_MENU_COLLECTION, USER_SIDE_NAV_MENU_COLLECTION } from '../../constants/menu-collection';
 import {getUserRole} from '../../helpers/auth-helper';
 import {complianceViewMenu} from './menu';
-import GlobalSummary from './global-summary';
+// import GlobalSummary from './global-summary';
 
 class ComplianceSummary extends React.PureComponent {
   constructor(props) {
@@ -50,7 +50,7 @@ class ComplianceSummary extends React.PureComponent {
         <div ref="compilanceResizeRef" style={{overflow: 'hidden'}}>
           <HeaderView />
           <div className={divClassName}>
-            <GlobalSummary />
+            {/* <GlobalSummary /> */}
           </div>
         </div>
         <div className={contentClassName}>
