@@ -2497,3 +2497,95 @@ export function secretScanUnmaskDocs(dispatch, params) {
     },
   });
 };
+
+// Compliance View APIs. 
+
+
+// individual cloud creds 
+export function getComplianceCloudCredentials(params = {}) {
+  const { cloud_provider } = params;
+  const url = `${backendElasticApiEndPoint()}/cloud-compliance-scan/nodes?cloud_provider=${cloud_provider}`;
+  return fetch(url, {
+    credentials: 'same-origin',
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: getAuthHeader(),
+    },
+  }).then(errorHandler);
+}
+
+// scan list for speific node and check type. 
+export function getComplianceScanList(params = {}) {
+  const { lucene_query: luceneQuery = [], nodeId, checkType } = params;
+  const luceneQueryEscaped = encodeURIComponent(getLuceneQuery(luceneQuery));
+  const url = `${backendElasticApiEndPoint()}/cloud-compliance-scan/scans?number=30&time_unit=day&lucene_query=${luceneQueryEscaped}&node_id=${nodeId}&compliance_check_type=${checkType}`;
+  return fetch(url, {
+    credentials: 'same-origin',
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: getAuthHeader(),
+    },
+  }).then(errorHandler);
+}
+
+// Scan results
+export function getScanResults(params = {}) {
+  const { lucene_query: luceneQuery = [], nodeId, checkType, scanId, cloudType } = params;
+
+  const requestBody = {
+    node_id: nodeId,
+    scan_id: scanId,
+    compliance_check_type: checkType,
+    type: [ cloudType ] 
+  };
+  const luceneQueryEscaped = encodeURIComponent(getLuceneQuery(luceneQuery));
+  const url = `${backendElasticApiEndPoint()}/compliance/search?from=0&size=20&lucene_query=${luceneQueryEscaped}&number=30&time_unit=day&hideMasked=true`;
+  return fetch(url, {
+    credentials: 'same-origin',
+    method: 'POST',
+    body: JSON.stringify(requestBody),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: getAuthHeader(),
+    },
+  }).then(errorHandler);
+}
+
+
+// Donut chart Scan Results
+export function getResultDonutData(params = {}) {
+  const { lucene_query: luceneQuery = [], checkType, nodeId, scanId} = params;
+  const requestBody = {
+    node_id: nodeId,
+    scan_id: scanId,
+  };
+  const luceneQueryEscaped = encodeURIComponent(getLuceneQuery(luceneQuery));
+  const url = `${backendElasticApiEndPoint()}/compliance/${checkType}/test_status_report?&lucene_query=${luceneQueryEscaped}&number=30&time_unit=day`;
+  return fetch(url, {
+    credentials: 'same-origin',
+    method: 'POST',
+    body: JSON.stringify(requestBody),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: getAuthHeader(),
+    },
+  }).then(errorHandler);
+}
+
+
+// centre chart data scan results. 
+export function getComplianceChartData(params = {}) {
+  const { lucene_query: luceneQuery = [], checkType, nodeId, scanId} = params;
+  const luceneQueryEscaped = encodeURIComponent(getLuceneQuery(luceneQuery));
+  const url = `${backendElasticApiEndPoint()}/cloud-compliance-scan/summary?number=30&time_unit=day&lucene_query=${luceneQueryEscaped}&node_id=${nodeId}&compliance_check_type=${checkType}`;
+  return fetch(url, {
+    credentials: 'same-origin',
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: getAuthHeader(),
+    },
+  }).then(errorHandler);
+}

@@ -3,7 +3,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Map} from 'immutable';
-// import ComplianceTotalTestReport from './total-test-report';
+import { getComplianceChartDataAction  } from '../../actions';
+import ComplianceTotalTestReport from './total-test-report';
 import Loader from '../loader';
 
 const loaderStyle = {
@@ -11,6 +12,13 @@ const loaderStyle = {
 };
 
 class ComplianceTotalTestReportContainer extends React.PureComponent {
+
+  componentDidMount() {
+    // Please use this for ChartAPI.
+    const { nodeId, checkType } = this.props;
+   this.props.dispatch(getComplianceChartDataAction({nodeId, checkType}));
+  }
+
   render() {
     const {reportView, checkType, ...rest} = this.props;
     // const checkTypeReport = reportView.get(checkType) || Map();
@@ -50,7 +58,8 @@ class ComplianceTotalTestReportContainer extends React.PureComponent {
 
 const mapStateToProps = state => ({
   reportView: state.getIn(['compliance', 'test_status_report_view']),
-  globalSearchQuery: state.get('globalSearchQuery')
+  globalSearchQuery: state.get('globalSearchQuery'),
+  chartData: state.get('compliance_chart_data')
 });
 
 export default connect(mapStateToProps)(ComplianceTotalTestReportContainer);

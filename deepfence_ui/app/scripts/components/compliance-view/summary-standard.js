@@ -69,7 +69,6 @@ class StandardSecSummary extends React.PureComponent {
   // }
 
   render() {
-    console.log('StandardSecSummary props: ', this.props);
     const {
       location: urlLocation,
     } = this.props;
@@ -100,6 +99,7 @@ class StandardSecSummary extends React.PureComponent {
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
                 checkType="standard"
+                nodeId={this.props.match.params.nodeid}
               />
             </div>
           </div>
@@ -108,6 +108,7 @@ class StandardSecSummary extends React.PureComponent {
           <div className="table relative">
             <HostReportContainer
               checkType="standard"
+              nodeId={this.props.match.params.nodeid}
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}
             />

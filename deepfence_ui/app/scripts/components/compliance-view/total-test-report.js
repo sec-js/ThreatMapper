@@ -5,6 +5,7 @@ import React from 'react';
 import {
   getComplianceTestStatusReportAction,
   setSearchQuery,
+  getComplianceChartDataAction
 } from '../../actions/app-actions';
 import {constructGlobalSearchQuery} from '../../utils/search-utils';
 import pollable from '../common/header-view/pollable';
@@ -61,29 +62,29 @@ class ComplianceTotalTestReport extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    const {stopPolling} = this.props;
+    const {stopPolling} = this.props; 
     stopPolling();
   }
 
   render() {
     const {data = []} = this.props;
     const sum = data.map(content => content.value).reduce((a, c) => a + c, 0);
-    // return (
-    //   <div>
-    //     { sum !== 0
-    //     && (
-    //     <div className="total-scan-wrapper">
-    //       <DonutChart
-    //         data={data}
-    //         chartHeight={550}
-    //         chartWidth={550}
-    //         onSectionClick={this.sectionClickHandler}
-    //         sum={sum}
-    //     />
-    //     </div>
-    //     )}
-    //   </div>
-    // );
+    return (
+      <div>
+        {/* { sum !== 0
+        && (
+        <div className="total-scan-wrapper">
+          <DonutChart
+            data={data}
+            chartHeight={550}
+            chartWidth={550}
+            onSectionClick={this.sectionClickHandler}
+            sum={sum}
+        />
+        </div>
+        )} */}
+      </div>
+    );
   }
 }
 

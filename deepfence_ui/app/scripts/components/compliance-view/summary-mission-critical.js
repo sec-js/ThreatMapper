@@ -98,6 +98,7 @@ class MissionCriticalSummary extends React.PureComponent {
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
                 checkType="mission_critical_classified"
+                nodeId={this.props.match.params.nodeid}
               />
             </div>
           </div>
@@ -105,6 +106,7 @@ class MissionCriticalSummary extends React.PureComponent {
         <div className="chart-wrapper table-wrapper">
           <div className="table relative">
             <HostReportContainer
+            nodeId={this.props.match.params.nodeid}
               checkType="mission_critical_classified"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}

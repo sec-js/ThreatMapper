@@ -99,6 +99,7 @@ class PCISummary extends React.PureComponent {
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
                 checkType="pcidss"
+                nodeId={this.props.match.params.nodeid}
               />
             </div>
           </div>
@@ -106,6 +107,7 @@ class PCISummary extends React.PureComponent {
         <div className="chart-wrapper table-wrapper">
           <div className="table relative">
             <HostReportContainer
+            nodeId={this.props.match.params.nodeid}
               checkType="pcidss"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}

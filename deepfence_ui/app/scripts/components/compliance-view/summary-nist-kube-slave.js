@@ -75,6 +75,7 @@ class NISTKubeSlaveSummary extends React.PureComponent {
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
                 checkType="nist_slave"
+                nodeId={this.props.match.params.nodeid}
               />
             </div>
           </div>
@@ -82,6 +83,7 @@ class NISTKubeSlaveSummary extends React.PureComponent {
         <div className="chart-wrapper table-wrapper">
           <div className="table relative">
             <HostReportContainer
+            nodeId={this.props.match.params.nodeid}
               checkType="nist_slave"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}

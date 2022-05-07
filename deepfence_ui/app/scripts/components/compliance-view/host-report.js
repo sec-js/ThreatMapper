@@ -12,6 +12,7 @@ import {
   // saveComplianceHostReportTableStateAction,
   // breadcrumbChange,
   // fetchLicenseStatus,
+  getComplianceScanListAction
 } from '../../actions/app-actions';
 import pollable from '../common/header-view/pollable';
 import HostReportRowDetail from './host-report-row-detail';
@@ -38,7 +39,7 @@ class HostReport extends React.PureComponent {
     this.state = {
       expandedRowIndex: 0,
     };
-    // this.getComplianceHostReport = this.getComplianceHostReport.bind(this);
+    this.getComplianceHostReport = this.getComplianceHostReport.bind(this);
   }
 
   UNSAFE_componentWillReceiveProps(newProps) {
@@ -133,43 +134,38 @@ class HostReport extends React.PureComponent {
   //   updatePollParams(params);
   // }
 
-  // getComplianceHostReport(pollParams = {}) {
-  //   const {
-  //     dispatch,
-  //     checkType,
-  //     filterValues = {},
-  //   } = this.props;
+  getComplianceHostReport(pollParams = {}) {
+    const {
+      dispatch,
+      checkType,
+      filterValues = {},
+      nodeId
+    } = this.props;
+    const {
+      globalSearchQuery,
+      page = 0,
+      pageSize = 10,
+      alertPanelHistoryBound = this.props.alertPanelHistoryBound || {},
+    } = pollParams;
 
-  //   const {
-  //     globalSearchQuery,
-  //     page = 0,
-  //     pageSize = 10,
-  //     alertPanelHistoryBound = this.props.alertPanelHistoryBound || {},
-  //   } = pollParams;
+    const tableFilters = pollParams.filters || filterValues;
+    const nonEmptyFilters = Object.keys(tableFilters).filter(
+      key => tableFilters[key].length
+    ).reduce((acc, key) => {
+      // replacing back the dot which was removed redux-form as it considers that a nested field.
+      acc[[key.replace('-', '.')]] = tableFilters[key];
+      return acc;
+    }, {});
 
-  //   const tableFilters = pollParams.filters || filterValues;
-  //   const nonEmptyFilters = Object.keys(tableFilters).filter(
-  //     key => tableFilters[key].length
-  //   ).reduce((acc, key) => {
-  //     // replacing back the dot which was removed redux-form as it considers that a nested field.
-  //     acc[[key.replace('-', '.')]] = tableFilters[key];
-  //     return acc;
-  //   }, {});
-
-  //   const params = {
-  //     checkType,
-  //     lucene_query: globalSearchQuery,
-  //     // Conditionally adding number and time_unit fields
-  //     ...(alertPanelHistoryBound.value
-  //       ? {number: alertPanelHistoryBound.value.number} : {}),
-  //     ...(alertPanelHistoryBound.value
-  //       ? {time_unit: alertPanelHistoryBound.value.time_unit} : {}),
-  //     node_filters: nonEmptyFilters,
-  //     start_index: page ? page * pageSize : page,
-  //     size: pageSize,
-  //   };
-  //   return dispatch(getComplianceHostReportAction(params));
-  // }
+    const params = {
+      checkType,
+      lucene_query: globalSearchQuery,
+      nodeId
+      // Conditionally adding number and time_unit fields
+      
+    };
+    return dispatch(getComplianceScanListAction(params));
+  }
 
   onExpandedChange(rowInfo) {
     const expandedRowIndex = {
@@ -211,12 +207,13 @@ class HostReport extends React.PureComponent {
       return (<Redirect to={link} />);
     }
     const {
-      data = [],
       total,
       testValueConfig = [],
       checkType,
       savedTablePageNumber = 0,
+      scanList = []
     } = this.props;
+    console.log('this props', this.props);
     const {expandedRowIndex} = this.state;
     const testValueColumnsWithHeaders = testValueConfig.map(el => ({
       Header: el.display,
@@ -242,7 +239,7 @@ class HostReport extends React.PureComponent {
     }];
     const testValueColumnsWithValues = testValueConfig.map(el => ({
       Header: el.value,
-      accessor: `status.${el.value}`,
+      accessor: `results.${el.value}`,
       maxWidth: 90,
       Cell: row => (
         <div>
@@ -278,29 +275,8 @@ class HostReport extends React.PureComponent {
             />
           </div>
         </div>
-        <DFTable
-          data={data}
-          manual
-          page={savedTablePageNumber}
-          // onFetchData={this.tableChangeHandler}
-          defaultPageSize={rowCountValue}
-          minRows={0}
-          pages={total}
-          showPagination
-          expanded={expandedRowIndex}
-          onPageChange={this.handlePageChange}
-          getTrProps={(state, rowInfo) => (
-            {
-              onClick: () => this.onExpandedChange(rowInfo),
-              style: {
-                cursor: 'pointer',
-              },
-            }
-          )}
-          SubComponent={row => (
-            <div className="sub-row">
-              <HostReportRowDetail
-                data={row.original.scans}
+        <HostReportRowDetail
+                data={this.props?.scanList || []}
                 rowClickHandler={this.rowClickHandler}
                 testValueColumns={testValueColumnsWithValues}
                 handleDownload={this.handleDownload}
@@ -308,34 +284,6 @@ class HostReport extends React.PureComponent {
                 isToasterVisible={isToasterVisible}
                 onDelete={this.getComplianceHostReport}
               />
-            </div>
-          )}
-          columns={[
-            {
-              Header: 'Node Type',
-              accessor: 'node_type',
-              Cell: (row) => {
-                let displayValue = row.value || 'container image';
-                displayValue = displayValue.replace('_', ' ');
-                return displayValue;
-              },
-              maxWidth: 150,
-            },
-            {
-              Header: 'Node',
-              accessor: 'node_name',
-              width: 550,
-              resizable: true,
-              sortable: false,
-            },
-            {
-              Header: '',
-              maxWidth: 80,
-              resizable: false,
-              sortable: false,
-            },
-          ]}
-        />
       </div>
     );
   }
@@ -344,6 +292,7 @@ class HostReport extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     // License details states
+    scanList: state.get('compliance_scan_list'),
     isLicenseActive: state.get('isLicenseActive'),
     isLicenseExpired: state.get('isLicenseExpired'),
     licenseResponse: state.get('licenseResponse'),

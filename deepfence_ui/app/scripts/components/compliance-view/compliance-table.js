@@ -13,6 +13,7 @@ import {
   addGlobalSettingsAction,
   showModal,
   hideModal,
+  getComplianceCloudCredentialsAction
 } from '../../actions/app-actions';
 
 const ComplianceTable = withRouter((props) => {
@@ -22,10 +23,11 @@ const ComplianceTable = withRouter((props) => {
 
   useEffect(() => {
     console.log(props);
-    dispatch(getGlobalSettingsAction());
+    dispatch(getComplianceCloudCredentialsAction({cloud_provider: props.cloudType}));
   }, []);
 
-  const settingsList = useSelector(state => state.get('global_settings')) || [];
+  const accountList = useSelector(state => state.get('cloud_credentials')) || [];
+
   const handleEditFile = row => {
     const modalProps = {
       title: 'Edit Setting',
@@ -39,7 +41,7 @@ const ComplianceTable = withRouter((props) => {
   };
 
   const rowClickHandler = row => {
-    props.history.push(`/compliance/aws/123/standard`);
+    props.history.push(`/compliance/aws/${row.original.node_id}/standard`);
   };
 
 
@@ -132,12 +134,12 @@ const ComplianceTable = withRouter((props) => {
   return (
     <div style={{ marginLeft: '-25px', marginTop: '-40px'}}>
       <DfTableV2
-        data={settingsList}
+        data={accountList}
         onRowClick={row => rowClickHandler(row)}
         columns={[
           {
-            Header: 'Platform',
-            accessor: 'label',
+            Header: 'Account ID',
+            accessor: 'account_id',
           },
           // {
           //   Header: 'Enabled',
@@ -152,8 +154,8 @@ const ComplianceTable = withRouter((props) => {
           //   }
           // },
           {
-            Header: 'Name & Scope',
-            accessor: 'label1',
+            Header: 'Cloud Provider',
+            accessor: 'cloud_provider',
           },
           {
             Header: 'Framework',

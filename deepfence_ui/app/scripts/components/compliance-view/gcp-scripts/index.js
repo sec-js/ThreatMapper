@@ -121,7 +121,7 @@ module "deepfence-compliance-single-project" {
           </pre>
         </div>
       </div>
-      <ComplianceTable />
+      <ComplianceTable cloudType='google_cloud' />
     </>
   );
 });

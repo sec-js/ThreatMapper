@@ -82,10 +82,11 @@ class HostReportRowDetail extends React.PureComponent {
       handleDownload,
       isToasterVisible,
     } = this.props;
+    console.log('dataa', this.props.data);
     return (
       <div>
         <DFTable
-          data={data}
+          data={this.props.data}
           getTrProps={(state, rowInfo) => ({
             onClick: () => rowClickHandler(rowInfo.original.scan_id),
             style: {

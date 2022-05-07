@@ -87,7 +87,8 @@ const HostReportContainer = props => {
     <HostReport
       // data={nodes}
       // total={total}
-      // checkType={checkType}
+      checkType={checkType}
+      nodeId={props.nodeId}
       handleDownload={params => handleDownload(params)}
       isToasterVisible={isToasterVisible}
       {...rest}

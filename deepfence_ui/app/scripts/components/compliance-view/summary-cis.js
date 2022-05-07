@@ -57,6 +57,8 @@ class CISSummary extends React.PureComponent {
     const {
       location: urlLocation,
     } = this.props;
+    console.log('StandardSecSummary propcadcasdcass: ', this.props.match.params);
+
     return (
       <div>
         <div className="chart-wrapper top-wrapper">
@@ -84,6 +86,7 @@ class CISSummary extends React.PureComponent {
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
                 checkType="cis"
+                nodeId={this.props.match.params.nodeid}
               />
             </div>
           </div>
@@ -92,6 +95,7 @@ class CISSummary extends React.PureComponent {
           <div className="table relative table-compliance-cis">
             <HostReportContainer
               checkType="cis"
+              nodeId={this.props.match.params.nodeid}
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}
             />
