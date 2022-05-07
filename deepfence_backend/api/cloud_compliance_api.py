@@ -236,6 +236,86 @@ def compliance_test_status_report(compliance_check_type):
                 response[status_aggr["key"]] += status_aggr["doc_count"]
     return set_response(data=response)
 
+
+@cloud_compliance_api.route("/compliance/<compliance_check_type>/test_category_report", methods=["GET", "POST"])
+# @jwt_required()
+# @valid_license_required
+def compliance_test_category_report(compliance_check_type):
+    if not compliance_check_type or compliance_check_type not in COMPLIANCE_CHECK_TYPES:
+        raise InvalidUsage("Invalid compliance_check_type: {0}".format(compliance_check_type))
+
+    number = request.args.get("number")
+    time_unit = request.args.get("time_unit")
+
+    if number:
+        try:
+            number = int(number)
+        except ValueError:
+            raise InvalidUsage("Number should be an integer value.")
+
+    if bool(number is not None) ^ bool(time_unit):
+        raise InvalidUsage("Require both number and time_unit or ignore both of them.")
+
+    if time_unit and time_unit not in TIME_UNIT_MAPPING.keys():
+        raise InvalidUsage("time_unit should be one of these, month/day/hour/minute")
+
+    lucene_query_string = request.args.get("lucene_query")
+    if lucene_query_string:
+        lucene_query_string = urllib.parse.unquote(lucene_query_string)
+    filters = {}
+    if request.is_json:
+        if type(request.json) != dict:
+            raise InvalidUsage("Request data invalid")
+        filters = request.json.get("filters", {})
+    filters["compliance_check_type"] = compliance_check_type
+    aggs = {
+        "node_id": {
+            "terms": {
+                "field": "node_id.keyword",
+                "size": ES_TERMS_AGGR_SIZE
+            },
+            "aggs": {
+                "group": {
+                    "terms": {
+                        "field": "group.keyword",
+                        "size": 25
+                    },
+                    "aggs": {
+                        "status": {
+                            "terms": {
+                                "field": "status.keyword",
+                                "size": 25
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    aggs_response = ESConn.aggregation_helper(
+        CLOUD_COMPLIANCE_SCAN,
+        filters,
+        aggs,
+        number,
+        TIME_UNIT_MAPPING.get(time_unit),
+        lucene_query_string
+    )
+    response = []
+    unique_status_list = set()
+
+    # print(aggs_response)
+    if "aggregations" in aggs_response:
+        for node_aggr in aggs_response["aggregations"]["node_id"]["buckets"]:
+            for category_aggr in node_aggr["group"]["buckets"]:
+                data = {}
+                data["node"] = category_aggr.get("key")
+                for status_aggr in category_aggr["status"]["buckets"]:
+                    data["value"] = status_aggr.get("doc_count")
+                    data["type"] = status_aggr.get("key")
+                    response.append(data)
+
+    return set_response(data=response)
+
 def filter_node_for_compliance(node_filters):
     host_names = []
     node_names = []
