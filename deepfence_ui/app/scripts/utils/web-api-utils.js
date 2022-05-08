@@ -2535,10 +2535,15 @@ export function getScanResults(params = {}) {
   const { lucene_query: luceneQuery = [], nodeId, checkType, scanId, cloudType } = params;
 
   const requestBody = {
-    node_id: nodeId,
+    _type: "cloud-compliance-scan",
+    _source: [],
+    filters: {
+      node_id: nodeId,
     scan_id: scanId,
     compliance_check_type: checkType,
-    type: [ cloudType ] 
+    type: [cloudType ],
+    }
+ 
   };
   const luceneQueryEscaped = encodeURIComponent(getLuceneQuery(luceneQuery));
   const url = `${backendElasticApiEndPoint()}/compliance/search?from=0&size=20&lucene_query=${luceneQueryEscaped}&number=30&time_unit=day&hideMasked=true`;
@@ -2583,6 +2588,25 @@ export function getComplianceChartData(params = {}) {
   return fetch(url, {
     credentials: 'same-origin',
     method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: getAuthHeader(),
+    },
+  }).then(errorHandler);
+}
+
+export function getComplianceBarChart(params = {}) {
+  const { lucene_query: luceneQuery = [], checkType, nodeId, scanId} = params;
+  const requestBody = {
+      node_id: nodeId,
+    scan_id: scanId,
+  };
+  const luceneQueryEscaped = encodeURIComponent(getLuceneQuery(luceneQuery));
+  const url = `${backendElasticApiEndPoint()}/compliance/${checkType}/test_category_report?&lucene_query=${luceneQueryEscaped}&number=30&time_unit=day`;
+  return fetch(url, {
+    credentials: 'same-origin',
+    method: 'POST',
+    body: JSON.stringify(requestBody),
     headers: {
       'Content-Type': 'application/json',
       Authorization: getAuthHeader(),

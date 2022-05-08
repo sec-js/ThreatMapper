@@ -10,6 +10,7 @@ import {
   requestManualAlertNotification,
   unmaskDocsAction,
   deleteDocsByIdAction,
+  getScanResultsAction
   // breadcrumbChange
 } from '../../actions/app-actions';
 import { dateTimeFormat } from '../../utils/time-utils';
@@ -244,6 +245,7 @@ class ComplianceTests extends React.PureComponent {
       alertPanelHistoryBound = this.props.alertPanelHistoryBound || {},
       hideMasked,
     } = params;
+    const cloudType = 'aws';
     const sortArr = sorted.map(el => (
       {
         sort_by: el.id,
@@ -251,22 +253,7 @@ class ComplianceTests extends React.PureComponent {
       }
     ));
     // TODO: Server support for sort by multiple fields
-    const sortField = sortArr.length ? sortArr[sortArr.length - 1] : {};
-    const query = {
-      from: page ? page * pageSize : page,
-      size: pageSize,
-      ...sortField,
-      lucene_query: globalSearchQuery,
-      // Conditionally adding number and time_unit fields
-      ...(alertPanelHistoryBound.value
-        ? { number: alertPanelHistoryBound.value.number } : {}),
-      ...(alertPanelHistoryBound.value
-        ? { time_unit: alertPanelHistoryBound.value.time_unit } : {}),
-      hideMasked: (hideMasked !== undefined && hideMasked !== null)
-        // eslint-disable-next-line react/destructuring-assignment
-        ? hideMasked : this.props.hideMasked,
-    };
-    // return dispatch(getComplianceTestAction(nodeId, scanId, checkType, query));
+    return dispatch(getScanResultsAction({nodeId, scanId, checkType, cloudType }));
   }
 
   handleDescClick(docId) {
@@ -280,10 +267,13 @@ class ComplianceTests extends React.PureComponent {
     }
   }
 
+
+
   render() {
     const {
       tests = [], total, checkType, multiSelectColumn
     } = this.props;
+    console.log('this.props', this.props);
     // const noDataText = `${checkType.toUpperCase()} compliance check could not be found`;
     const noDataText = `Compliance check could not be found`;
     return (

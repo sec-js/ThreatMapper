@@ -100,7 +100,10 @@ import {
   getRuntimeBomData,
   getComplianceCloudCredentials, 
   getComplianceScanList,
-  getComplianceChartData
+  getComplianceChartData,
+  getComplianceBarChart,
+  getScanResults,
+  getResultDonutData
 } from '../utils/web-api-utils';
 
 import { GRAPH_VIEW_MODE, TABLE_VIEW_MODE } from '../constants/naming';
@@ -1945,4 +1948,32 @@ export function getComplianceChartDataAction(params) {
     ActionTypes.GET_COMPLIANCE_CHART_FAILURE,
   ];
   return genericThunkAction(actionTypes, getComplianceChartData, params);
+}
+
+
+export function getComplianceBarChartAction(params) {
+  const actionTypes = [
+    ActionTypes.GET_COMPLIANCE_BAR_CHART_REQUEST,
+    ActionTypes.GET_COMPLIANCE_BAR_CHART_SUCCESS,
+    ActionTypes.GET_COMPLIANCE_BAR_CHART_FAILURE,
+  ];
+  return genericThunkAction(actionTypes, getComplianceBarChart, params);
+}
+
+export function getScanResultsAction(params) {
+  const actionTypes = [
+    ActionTypes.GET_SCAN_RESULT_REQUEST,
+    ActionTypes.GET_SCAN_RESULT_SUCCESS,
+    ActionTypes.GET_SCAN_RESULT_FAILURE,
+  ];
+  return genericThunkAction(actionTypes, getScanResults, params);
+}
+
+export function getResultDonutDataAction(params) {
+  const actionTypes = [
+    ActionTypes.GET_RESULT_DONUT_REQUEST,
+    ActionTypes.GET_RESULT_DONUT_SUCCESS,
+    ActionTypes.GET_RESULT_DONUT_FAILURE,
+  ];
+  return genericThunkAction(actionTypes, getResultDonutData, params);
 }

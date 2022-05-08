@@ -34,7 +34,6 @@ class ComplianceDetailsView extends React.PureComponent {
   }
 
   render() {
-    console.log('IS THIS WORKING????');
     const {redirectBack, link} = this.state;
     if (redirectBack) {
       return (<Redirect to={link} />);
@@ -58,7 +57,7 @@ class ComplianceDetailsView extends React.PureComponent {
     const scanIdWithoutChecktype = scanId.replace(checkType, '');
     const lastUnderscoreIndex = scanIdWithoutChecktype.lastIndexOf('_');
     const firstUnderscoreIndex = scanIdWithoutChecktype.indexOf('_');
-    const nodeId = scanIdWithoutChecktype.substring(firstUnderscoreIndex + 1, lastUnderscoreIndex);
+    const nodeId = scanId.replace(checkType, '');
     const timeOfScanStr = scanIdWithoutChecktype.substring(lastUnderscoreIndex + 1);
     const timeOfScan = moment.utc(timeOfScanStr);
 
