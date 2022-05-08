@@ -107,7 +107,7 @@ class PCISummary extends React.PureComponent {
         <div className="chart-wrapper table-wrapper">
           <div className="table relative">
             <HostReportContainer
-            nodeId={this.props.match.params.nodeid}
+              nodeId={this.props.match.params.nodeid}
               checkType="hipaa"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}

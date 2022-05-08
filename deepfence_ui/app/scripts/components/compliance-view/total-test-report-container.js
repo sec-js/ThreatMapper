@@ -21,36 +21,35 @@ class ComplianceTotalTestReportContainer extends React.PureComponent {
 
   render() {
     const {reportView, checkType, ...rest} = this.props;
-    // const checkTypeReport = reportView.get(checkType) || Map();
-    // const data = checkTypeReport.get('labelled_report') || [];
-    // const initiatedByPollable = checkTypeReport.get('initiatedByPollable');
-    // const loading = checkTypeReport.get('loading') && !initiatedByPollable;
-    // const emptyData = data.length === 0 && !loading;
+    const checkTypeReport = reportView && reportView.get(checkType) || Map();
+    const data = checkTypeReport && checkTypeReport.get('labelled_report') || [];
+    const initiatedByPollable = checkTypeReport && checkTypeReport.get('initiatedByPollable');
+    const loading = checkTypeReport && checkTypeReport.get('loading') && !initiatedByPollable;
+    const emptyData = data.length === 0 && !loading;
     return (
       <div>
-        {/* {loading && data.length === 0
+        {loading && data.length === 0
           && (
           <Loader
             small
             style={loaderStyle}
           />
           )
-        } */}
-        {/* {emptyData
-          &&  */}
-          {/* ( */}
+        }
+        {emptyData
+          &&
+          (
             <div className="" style={{margin: '250px', position: 'relative'}}>
               <div className="absolute-center-compliance">
                 No Data Available
               </div>
             </div>
-          {/* ) */}
-          {/* } */}
-        {/* <ComplianceTotalTestReport
-          // data={data}
+          )}
+        <ComplianceTotalTestReport
+          data={data}
           checkType={checkType}
           {...rest}
-        /> */}
+        />
       </div>
     );
   }

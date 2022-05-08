@@ -1,16 +1,15 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable */
 import React from 'react';
-import DonutChart from '../common/charts/donut-chart/index';
+import StackedColumnChart from '../common/charts/stacked-chart/column-stacked';
 import {
-  getComplianceTestStatusReportAction,
+  getComplianceTestCategoryReportAction,
   setSearchQuery,
-  getComplianceChartDataAction
 } from '../../actions/app-actions';
 import {constructGlobalSearchQuery} from '../../utils/search-utils';
 import pollable from '../common/header-view/pollable';
 
-class ComplianceTotalTestReport extends React.PureComponent {
+class ComplianceTestCategoryReport extends React.PureComponent {
   constructor(props) {
     super(props);
     this.getReport = this.getReport.bind(this);
@@ -24,13 +23,17 @@ class ComplianceTotalTestReport extends React.PureComponent {
   }
 
   getReport(pollParams) {
-    const {dispatch, checkType} = this.props;
+    const {
+      dispatch, nodeId, scanId, checkType
+    } = this.props;
     const {
       globalSearchQuery,
       alertPanelHistoryBound = this.props.alertPanelHistoryBound || {},
       initiatedByPollable,
     } = pollParams;
     const params = {
+      nodeId,
+      scanId,
       checkType,
       lucene_query: globalSearchQuery,
       // Conditionally adding number and time_unit fields
@@ -40,11 +43,11 @@ class ComplianceTotalTestReport extends React.PureComponent {
         ? {time_unit: alertPanelHistoryBound.value.time_unit} : {}),
       initiatedByPollable,
     };
-    // return dispatch(getComplianceTestStatusReportAction(params));
+    // return dispatch(getComplianceTestCategoryReportAction(params));
   }
 
   sectionClickHandler(point) {
-    if (!point.label) {
+    if (!point.node) {
       return;
     }
     const {
@@ -52,7 +55,7 @@ class ComplianceTotalTestReport extends React.PureComponent {
       dispatch,
     } = this.props;
     const newSearchParams = {
-      status: point.label,
+      test_category: point.node,
     };
     const searchQuery = constructGlobalSearchQuery(existingQuery, newSearchParams);
     const globalSearchQuery = {
@@ -67,25 +70,17 @@ class ComplianceTotalTestReport extends React.PureComponent {
   }
 
   render() {
-    const {data = []} = this.props;
-    const sum = data.map(content => content.value).reduce((a, c) => a + c, 0);
+    const {data} = this.props;
     return (
       <div>
-        { sum !== 0
-        && (
-        <div className="total-scan-wrapper">
-          <DonutChart
-            data={data}
-            chartHeight={550}
-            chartWidth={550}
-            onSectionClick={this.sectionClickHandler}
-            sum={sum}
+        <StackedColumnChart
+          data={data}
+          onSectionClick={this.sectionClickHandler}
+          chartHeight={200}
         />
-        </div>
-        )}
       </div>
     );
   }
 }
 
-export default pollable()(ComplianceTotalTestReport);
+export default pollable()(ComplianceTestCategoryReport);

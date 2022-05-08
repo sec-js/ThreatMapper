@@ -6,14 +6,14 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import moment from 'moment';
 import {Redirect} from 'react-router-dom';
-// import ComplianceTestsView from './tests-container';
-// import ComplianceTestCategoryReportContainer from './test-category-report-container';
-// import ComplianceTestStatusReportContainer from './test-status-report-container';
+import ComplianceTestsView from './tests-container';
+import ComplianceTestCategoryReportContainer from './test-category-report-container';
+import ComplianceTestStatusReportContainer from './test-status-report-container';
 import SideNavigation from '../common/side-navigation/side-navigation';
 import HeaderView from '../common/header-view/header-view';
 import { ADMIN_SIDE_NAV_MENU_COLLECTION, USER_SIDE_NAV_MENU_COLLECTION } from '../../constants/menu-collection';
 import {getUserRole} from '../../helpers/auth-helper';
-// import MaskFilterForm from './mask-filter-form';
+import MaskFilterForm from './mask-filter-form';
 
 class ComplianceDetailsView extends React.PureComponent {
   constructor(props) {
@@ -82,19 +82,19 @@ class ComplianceDetailsView extends React.PureComponent {
           <div className="" style={{paddingTop: '64px'}} />
           <div className={`report ${this.props.isFiltersViewVisible ? 'collapse-fixed-panel-header' : ''}`}>
             <div className="test-status-report test-status-report-comliance">
-              {/* <ComplianceTestStatusReportContainer
+              <ComplianceTestStatusReportContainer
                 nodeId={nodeId}
                 scanId={scanId}
                 checkType={checkType}
                 timeOfScan={timeOfScan}
-              /> */}
+              />
             </div>
             <div className="test-category-report test-category-report-compliance">
-              {/* <ComplianceTestCategoryReportContainer
+              <ComplianceTestCategoryReportContainer
                 nodeId={nodeId}
                 scanId={scanId}
                 checkType={checkType}
-              /> */}
+              />
             </div>
           </div>
           <div className="table">
@@ -106,11 +106,11 @@ class ComplianceDetailsView extends React.PureComponent {
                 <MaskFilterForm />
               </div>
             </div>
-            {/* <ComplianceTestsView
+            <ComplianceTestsView
               nodeId={nodeId}
               scanId={scanId}
               checkType={checkType}
-            /> */}
+            />
           </div>
           <div className={contentClassName}>
             {/* <button
