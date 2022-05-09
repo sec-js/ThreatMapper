@@ -131,7 +131,8 @@ const ComplianceTable = withRouter((props) => {
   };
 
   return (
-    <div style={{ marginLeft: '-25px', marginTop: '-40px'}}>
+    <div style={{ marginLeft: '-25px', marginTop: '-40px', marginBottom: '75px'}}>
+      <h5 style={{marginLeft: '25px', color: 'white'}}>Account Detail</h5>
       <DfTableV2
         data={accountList}
         onRowClick={row => rowClickHandler(row)}

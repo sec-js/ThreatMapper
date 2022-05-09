@@ -70,6 +70,7 @@ class ComplianceDetailsView extends React.PureComponent {
       'navigation',
       {'with-filters': isFiltersViewVisible},
     );
+    console.log('details props', this.props);
     return (
       <div className="compliance-details">
         <SideNavigation
@@ -79,6 +80,15 @@ class ComplianceDetailsView extends React.PureComponent {
         <div className={divClassName}>
           <HeaderView />
           <div className="" style={{paddingTop: '64px'}} />
+          <div className="go-back-btn" onClick={() => this.props.history.push('/compliance')}>
+          <i className="fa fa-arrow-left" aria-hidden="true" />{' '}
+          <span
+            style={{ paddingLeft: '5px', color: '#0276C9', fontSize: '15px' }}
+          >
+            {' '}
+            Go Back
+          </span>
+        </div>
           <div className={`report ${this.props.isFiltersViewVisible ? 'collapse-fixed-panel-header' : ''}`}>
             <div className="test-status-report test-status-report-comliance">
               <ComplianceTestStatusReportContainer

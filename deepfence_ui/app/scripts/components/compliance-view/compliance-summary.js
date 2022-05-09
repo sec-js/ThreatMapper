@@ -30,7 +30,7 @@ class ComplianceSummary extends React.PureComponent {
 
   render() {
     const {match, isSideNavCollapsed, isFiltersViewVisible} = this.props;
-    console.log('summary', this.props.match.params.cloudtype);
+    console.log('summary', this.props);
     const divClassName = classnames({
       'collapse-side-nav': isSideNavCollapsed,
       'expand-side-nav': !isSideNavCollapsed,
@@ -53,6 +53,15 @@ class ComplianceSummary extends React.PureComponent {
           <div className={divClassName}>
             {/* <GlobalSummary /> */}
           </div>
+        </div>
+        <div className="go-back-btn" onClick={() => this.props.history.push(`/compliance/${match.params.cloudtype}`)} style={{marginLeft: '100px'}}>
+          <i className="fa fa-arrow-left" aria-hidden="true" />{' '}
+          <span
+            style={{ paddingLeft: '5px', color: '#0276C9', fontSize: '15px' }}
+          >
+            {' '}
+            Go Back
+          </span>
         </div>
         <div className={contentClassName}>
           <div className="df-tabs">

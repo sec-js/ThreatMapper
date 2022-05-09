@@ -2536,12 +2536,10 @@ export function getScanResults(params = {}) {
 
   const requestBody = {
     _type: "cloud-compliance-scan",
-    _source: [],
     filters: {
       node_id: nodeId,
     scan_id: scanId,
     compliance_check_type: checkType,
-    type: [cloudType ],
     }
  
   };
