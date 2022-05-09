@@ -1646,6 +1646,61 @@ export function rootReducer(state = initialState, action) {
         'No data available');
     }
 
+    // Compliance View 
+
+    case ActionTypes.GET_COMPLIANCE_CRED_SUCCESS: {
+      const {
+        payload: { data },
+      } = action;
+      state = state.set('cloud_credentials', data);
+      return state;
+    }
+
+    case ActionTypes.GET_COMPLIANCE_SCAN_LIST_SUCCESS: {
+      const { payload: { data: { hits = [], total = 0 } = {} } = {} } = action;
+
+      /* eslint-disable no-underscore-dangle */
+      const scans = hits.map(hit => ({
+        ...hit._source,
+        doc_index: hit._index,
+      }));
+      state = state.set('compliance_scan_list', scans)
+      return state;
+    }
+
+    case ActionTypes.GET_COMPLIANCE_CHART_SUCCESS: {
+      const {
+        payload: { data },
+      } = action;
+      state = state.set('compliance_chart_data', data);
+      return state;
+    }
+
+    case ActionTypes.GET_COMPLIANCE_BAR_CHART_SUCCESS: {
+      const {
+        payload: { data },
+      } = action;
+      state = state.set('compliance_barchart_data', data);
+      return state;
+    }
+
+
+    case ActionTypes.GET_SCAN_RESULT_SUCCESS: {
+      const {
+        payload: { data },
+      } = action;
+      state = state.set('compliance_result_scans', data);
+      return state;
+    }
+
+    case ActionTypes.GET_RESULT_DONUT_SUCCESS: {
+      const {
+        payload: { data },
+      } = action;
+      state = state.set('compliance_result_donut', data);
+      return state;
+    }
+
     default: {
       // forwarding unknown action types to redux-form reducer.
       state = state.set('form', formReducer(state.get('form'), action));

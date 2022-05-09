@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import SLACK_LOGO from '../../images/slack.png';
 import EMAIL_LOGO from '../../images/email-icon.png';
 import PAGER_DUTY_LOGO from '../../images/pager-duty.jpg';
@@ -10,6 +11,12 @@ import HTTP_LOGO from '../../images/http.png';
 import GOOGLE_CHRONICLE_LOGO from '../../images/google-chronicle.png';
 import REPORTS from '../../images/reports.png';
 import MICROSOFT_LOGO from '../../images/microsoft-teams.png';
+import AWS_LOGO from '../../images/aws.png'
+import GOOGLE_CLOUD_LOGO from '../../images/google-cloud.png';
+import AZURE_LOGO from '../../images/m-azure.png'
+import { AwsTerraFormScript } from '../components/compliance-view/aws-scripts';
+import { AzureTerraFormScript } from '../components/compliance-view/azure-scripts';
+import { GcpTerraFormScript } from '../components/compliance-view/gcp-scripts';
 
 export const INTEGRATION_MENU_COLLECTION = [
   {
@@ -50,12 +57,27 @@ export const INTEGRATION_MENU_COLLECTION = [
   },
 ];
 
+export const COMPLIANCE_TILES_COLLECTION = [
+  {
+    name: 'aws', isActive: true, icon: AWS_LOGO, displayName: 'AWS', bgcolor: 'white', component: AwsTerraFormScript ,
+  },
+  {
+    name: 'google_cloud', isActive: true, icon: GOOGLE_CLOUD_LOGO, displayName: 'Google cloud',  bgcolor: 'white', component: GcpTerraFormScript,
+  },
+  {
+    name: 'azure', isActive: false, icon: AZURE_LOGO, displayName: 'Microsoft Azure',  bgcolor: 'white', component: AzureTerraFormScript,
+  },
+];
+
 export const ADMIN_SIDE_NAV_MENU_COLLECTION = [
   {
     name: 'Topology', menuIcon: 'icon-Topology', isActive: true, link: '/topology'
   },
   {
     name: 'Vulnerabilities', menuIcon: 'icon-biohazard', isActive: false, link: '/vulnerability'
+  },
+  {
+    name: 'Compliance', menuIcon: "icon-compliance", isActive: false, link: '/compliance'
   },
   {
     name: 'Secrets', menuIcon: "nav-icon-secret", isActive: false, link: '/secret-scan'
@@ -74,6 +96,9 @@ export const USER_SIDE_NAV_MENU_COLLECTION = [
   },
   {
     name: 'Vulnerabilities', menuIcon: 'icon-biohazard', isActive: false, link: '/vulnerability'
+  },
+  {
+    name: 'Compliance', menuIcon: "icon-compliance", isActive: false, link: '/compliance'
   },
   {
     name: 'Secrets', menuIcon: "nav-icon-secret", isActive: false, link: '/secret-scan'

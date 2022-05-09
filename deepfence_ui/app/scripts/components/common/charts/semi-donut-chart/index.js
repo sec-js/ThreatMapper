@@ -29,7 +29,7 @@ const chartColors = ({ label }) => {
   if (label === 'fail') {
     return complianceColors.fail;
   }
-  if (label === 'pass') {
+  if (label === 'ok') {
     return complianceColors.pass;
   }
   if (label === 'info') {
@@ -38,7 +38,7 @@ const chartColors = ({ label }) => {
   if (label === 'note') {
     return complianceColors.note;
   }
-  if (label === 'warn') {
+  if (label === 'alarm') {
     return complianceColors.warn;
   }
 };
@@ -86,7 +86,7 @@ const chartPieStyle = el => {
       opacity: 0.8,
     };
   }
-  if (el.label === 'pass') {
+  if (el.label === 'ok') {
     return {
       stroke: complianceColors.pass,
       opacity: 0.8,
@@ -104,7 +104,7 @@ const chartPieStyle = el => {
       opacity: 0.8,
     };
   }
-  if (el.label === 'warn') {
+  if (el.label === 'alarm') {
     return {
       stroke: complianceColors.warn,
       opacity: 0.8,

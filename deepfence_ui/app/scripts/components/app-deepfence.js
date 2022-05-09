@@ -25,7 +25,9 @@ import RegisterViaInviteView from './auth-module/register-via-invite-view/regist
 import changePasswordView from './settings-view/user-profile-view/change-password-view';
 import { isPasswordInvalidated, isUserSessionActive, isUserSessionActiveAsync } from '../helpers/auth-helper';
 import Loader from './loader';
-
+import { ComplianceViewHome } from './compliance-view';
+import ComplianceDetailsView from './compliance-view/details';
+import ComplianceSummary from './compliance-view/compliance-summary';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const [isAuthLoading, setIsAuthLoading] = useState(true);
@@ -140,6 +142,12 @@ class DeepFenceApp extends React.Component {
             />
             <PrivateRoute path="/vulnerability" component={VulnerabilityView} />
             <PrivateRoute path="/secret-scan" component={SecretScanHome} />
+            <PrivateRoute
+              path="/compliance/summary/:scanId/:checkType"
+              component={ComplianceDetailsView}
+            />
+            <PrivateRoute path="/compliance/:cloudtype/:nodeid/:checkType" component={ComplianceSummary} />
+            <PrivateRoute path="/compliance" component={ComplianceViewHome} />
             <PrivateRoute
               path="/registry_vulnerability_scan"
               component={RegistryVulnerabilityScan}
