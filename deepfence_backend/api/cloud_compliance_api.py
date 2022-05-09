@@ -11,7 +11,9 @@ from utils.response import set_response
 from utils.esconn import ESConn, GroupByParams
 from utils.decorators import user_permission, non_read_only_user, admin_user_only
 from collections import defaultdict
-from utils.constants import USER_ROLES, TIME_UNIT_MAPPING, CVE_INDEX, ALL_INDICES, CLOUD_COMPLIANCE_SCAN, NODE_TYPE_CONTAINER, NODE_TYPE_CONTAINER_IMAGE, ES_TERMS_AGGR_SIZE, COMPLIANCE_CHECK_TYPES
+from utils.constants import USER_ROLES, TIME_UNIT_MAPPING, CVE_INDEX, ALL_INDICES, CLOUD_COMPLIANCE_SCAN, \
+     NODE_TYPE_CONTAINER, NODE_TYPE_CONTAINER_IMAGE, ES_TERMS_AGGR_SIZE, COMPLIANCE_CHECK_TYPES, \
+     CLOUD_COMPLIANCE_SCAN_NODES_CACHE_KEY, CLOUD_COMPLIANCE_LOGS_INDEX, CLOUD_COMPLIANCE_INDEX
 from flask.views import MethodView
 from utils.custom_exception import InvalidUsage, InternalError, DFError, NotFound
 from models.node_tags import NodeTags
@@ -21,12 +23,13 @@ from flask_jwt_extended import get_jwt_identity
 from utils.resource import get_nodes_list, get_default_params
 import urllib.parse
 from utils.helper import modify_es_index
+from config.redisconfig import redis
 
 cloud_compliance_api = Blueprint("cloud_compliance_api", __name__)
 
 
 @cloud_compliance_api.route("compliance/search", methods=["POST"])
-# @jwt_required()
+@jwt_required()
 # @valid_license_required
 def search():
     from_arg = request.args.get("from", 0)
@@ -97,8 +100,6 @@ def search():
     if index_name not in ALL_INDICES:
         raise InvalidUsage("_type should be one of {}".format(ALL_INDICES))
 
-    # return set_response(data="api is working fine initially as of now")
-    
     node_filters = request.json.get("node_filters", {})
     if node_filters:
         if index_name == CLOUD_COMPLIANCE_SCAN:
@@ -106,27 +107,6 @@ def search():
             if tmp_filters:
                 filters = {**filters, **tmp_filters}
     scripted_sort = None
-    # severity_sort = False
-    # if index_name == ALERTS_INDEX:
-    #     if sort_by == "severity":
-    #         severity_sort = True
-    # elif index_name == CVE_INDEX:
-    #     if sort_by == "cve_severity":
-    #         severity_sort = True
-    # if severity_sort:
-    #     scripted_sort = [
-    #         {
-    #             "_script": {
-    #                 "type": "number",
-    #                 "script": {
-    #                     "lang": "painless",
-    #                     "source": "params.sortOrder.indexOf(doc['" + sort_by + ".keyword'].value)",
-    #                     "params": {"sortOrder": ["info", "low", "high", "medium", "critical"]}
-    #                 },
-    #                 "order": sort_order
-    #             }
-    #         }
-    #     ]
     search_response = ESConn.search_by_and_clause(
         index_name,
         filters,
@@ -174,7 +154,7 @@ def search():
     return set_response(data=search_response)
     
 @cloud_compliance_api.route("/compliance/<compliance_check_type>/test_status_report", methods=["GET", "POST"])
-# @jwt_required()
+@jwt_required()
 # @valid_license_required
 def compliance_test_status_report(compliance_check_type):
     if not compliance_check_type or compliance_check_type not in COMPLIANCE_CHECK_TYPES:
@@ -229,16 +209,18 @@ def compliance_test_status_report(compliance_check_type):
         lucene_query_string
     )
     response = defaultdict(int)
-    print(aggs_response)
     if "aggregations" in aggs_response:
         for scan_id_aggr in aggs_response["aggregations"]["scan_id"]["buckets"]:
             for status_aggr in scan_id_aggr["status"]["buckets"]:
                 response[status_aggr["key"]] += status_aggr["doc_count"]
-    return set_response(data=response)
+    list_response = []
+    for label, value in response.items():
+        list_response.append({"label": label, "value": value})
+    return set_response(data=list_response)
 
 
 @cloud_compliance_api.route("/compliance/<compliance_check_type>/test_category_report", methods=["GET", "POST"])
-# @jwt_required()
+@jwt_required()
 # @valid_license_required
 def compliance_test_category_report(compliance_check_type):
     if not compliance_check_type or compliance_check_type not in COMPLIANCE_CHECK_TYPES:
@@ -303,7 +285,6 @@ def compliance_test_category_report(compliance_check_type):
     response = []
     unique_status_list = set()
 
-    # print(aggs_response)
     if "aggregations" in aggs_response:
         for node_aggr in aggs_response["aggregations"]["node_id"]["buckets"]:
             for category_aggr in node_aggr["group"]["buckets"]:
@@ -371,4 +352,147 @@ def filter_node_for_compliance(node_filters):
         filters["kubernetes_cluster_name"] = k8_names
     return filters
 
+
+@cloud_compliance_api.route("/cloud-compliance-scan/nodes", methods=["GET"])
+@jwt_required()
+def cloud_compliance_scan_nodes():
+    """
+    Get list of nodes available for cloud compliance scans
+    :return:
+    """
+    cloud_provider = request.args.get("cloud_provider")
+    compliance_scan_node_details_list_str = redis.get(CLOUD_COMPLIANCE_SCAN_NODES_CACHE_KEY)
+    if not compliance_scan_node_details_list_str:
+        return set_response([])
+    nodes_list = json.loads(compliance_scan_node_details_list_str)
+    if cloud_provider:
+        nodes_list = [x for x in nodes_list if x["cloud_provider"] == cloud_provider]
+    return set_response(nodes_list)
+
+
+@cloud_compliance_api.route("/cloud-compliance-scan/scans", methods=["GET"])
+@jwt_required()
+def cloud_compliance_node_scans():
+    """
+    Get list of cloud compliance scans for a specific node
+    :return:
+    """
+    # required fields
+    number = request.args.get("number")
+    time_unit = request.args.get("time_unit")
+
+    if number:
+        try:
+            number = int(number)
+        except ValueError:
+            raise InvalidUsage("Number should be an integer value.")
+
+    if bool(number is not None) ^ bool(time_unit):
+        raise InvalidUsage("Require both number and time_unit or ignore both of them.")
+
+    if time_unit and time_unit not in TIME_UNIT_MAPPING.keys():
+        raise InvalidUsage("time_unit should be one of these, month/day/hour/minute")
+
+    lucene_query_string = request.args.get("lucene_query")
+    if lucene_query_string:
+        lucene_query_string = urllib.parse.unquote(lucene_query_string)
+    else:
+        lucene_query_string = ""
+
+    node_id = request.args.get("node_id")
+    compliance_check_type = request.args.get("compliance_check_type")
+    if not node_id:
+        raise InvalidUsage("node id is missing")
+    if not compliance_check_type or compliance_check_type not in COMPLIANCE_CHECK_TYPES:
+        raise InvalidUsage("Invalid compliance type, should be one of: {}".format(COMPLIANCE_CHECK_TYPES))
+
+    filters = {"node_id": node_id, "compliance_check_type": compliance_check_type}
+    page_size = 10
+    start_index = 0
+    page_size = request.args.get("size", page_size)
+    start_index = request.args.get("start_index", start_index)
+    sort_order = request.args.get("sort_order", "desc")
+
+    es_resp = ESConn.search_by_and_clause(
+        CLOUD_COMPLIANCE_LOGS_INDEX, filters, start_index, sort_order, number=number,
+        time_unit=TIME_UNIT_MAPPING.get(time_unit), size=page_size, lucene_query_string=lucene_query_string)
+    return set_response(data=es_resp)
+
+
+@cloud_compliance_api.route("/cloud-compliance-scan/summary", methods=["GET"])
+@jwt_required()
+def get_compliance_report():
+    # required fields
+    number = request.args.get("number")
+    time_unit = request.args.get("time_unit")
+
+    if number:
+        try:
+            number = int(number)
+        except ValueError:
+            raise InvalidUsage("Number should be an integer value.")
+
+    if bool(number is not None) ^ bool(time_unit):
+        raise InvalidUsage("Require both number and time_unit or ignore both of them.")
+
+    if time_unit and time_unit not in TIME_UNIT_MAPPING.keys():
+        raise InvalidUsage("time_unit should be one of these, month/day/hour/minute")
+    lucene_query_string = request.args.get("lucene_query")
+    if lucene_query_string:
+        lucene_query_string = urllib.parse.unquote(lucene_query_string)
+    else:
+        lucene_query_string = ""
+
+    node_id = request.args.get("node_id")
+    compliance_check_type = request.args.get("compliance_check_type")
+    if not node_id:
+        raise InvalidUsage("node id is missing")
+    if not compliance_check_type or compliance_check_type not in COMPLIANCE_CHECK_TYPES:
+        raise InvalidUsage("Invalid compliance type, should be one of: {}".format(COMPLIANCE_CHECK_TYPES))
+
+    filters = {"node_id": node_id, "compliance_check_type": compliance_check_type}
+
+    aggs_scan_status = {
+        "compliance_check_type": {
+            "terms": {
+                "field": "compliance_check_type.keyword",
+            },
+            "aggs": {
+                "status": {
+                    "terms": {
+                        "field": "status.keyword",
+                    }
+                }
+            }
+        }
+    }
+
+    scan_status_resp = ESConn.aggregation_helper(
+        CLOUD_COMPLIANCE_INDEX,
+        filters,
+        aggs_scan_status,
+        number,
+        TIME_UNIT_MAPPING.get(time_unit),
+        lucene_query_string,
+        add_masked_filter=False
+    )
+
+    scan_status_data = []
+    if "aggregations" in scan_status_resp:
+        for check_type_aggr in scan_status_resp["aggregations"]["compliance_check_type"]["buckets"]:
+            for bucket in check_type_aggr["status"]["buckets"]:
+                bucket["label"] = bucket.pop("key")
+                bucket["value"] = bucket.pop("doc_count")
+            el = {
+                "compliance_check_type": check_type_aggr.get('key'),
+                "count": check_type_aggr.get("doc_count"),
+                "aggs": check_type_aggr["status"]["buckets"]
+            }
+            scan_status_data.append(el)
+
+    unify = {
+        "compliance_scan_status": scan_status_data,
+    }
+
+    return set_response(data=unify)
 

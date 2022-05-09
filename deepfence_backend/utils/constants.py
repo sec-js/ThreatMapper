@@ -191,6 +191,11 @@ REGISTRY_IMAGES_CACHE_EXPIRY_TIME = datetime.timedelta(days=2)
 
 SECRET_SCANNER_FILE_PREFIX = '/tmp/Deepfence/SecretScanning'
 
+CLOUD_COMPLIANCE_SCAN_NODES_CACHE_KEY = "CLOUD_COMPLIANCE_NODES_LIST"
+COMPLIANCE_CHECK_TYPES = ["cis", "nist", "pci", "hipaa", "gdpr", "soc2"]
+CLOUD_COMPLIANCE_LOGS_INDEX = "cloud-compliance-scan-logs"
+CLOUD_COMPLIANCE_INDEX = "cloud-compliance-scan"
+
 DURATION_IN_MINS = [
     (-1, 'immediate'),
     (5, 'five minutes'),
@@ -269,8 +274,6 @@ NODE_BULK_ACTIONS = {
         NODE_ACTION_CVE_SCAN_STOP, NODE_ACTION_SECRET_SCAN_START],
     NODE_TYPE_POD: [NODE_ACTION_DOWNLOAD_REPORT, NODE_ACTION_SCHEDULE_SEND_REPORT],
 }
-COMPLIANCE_CHECK_TYPES = ["cis", "nist_master", "nist_slave", "pci", "hipaa", "standard",
-                          "mission_critical_classified"]
 CVE_SCAN_STATUS_STARTED = "STARTED"
 CVE_SCAN_STATUS_IN_PROGRESS = "SCAN_IN_PROGRESS"
 CVE_SCAN_STATUS_WARN = "WARN"
