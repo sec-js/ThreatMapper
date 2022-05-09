@@ -6,11 +6,11 @@ import injectModalTrigger from '../common/generic-modal/modal-trigger-hoc';
 
 const testValueConfig = [
   {
-    display: 'Pass',
-    value: 'pass',
+    display: 'Alarm',
+    value: 'alarm',
   },
   {
-    display: 'Warn',
+    display: 'Ok',
     value: 'warn',
   },
   {
@@ -18,8 +18,8 @@ const testValueConfig = [
     value: 'info',
   },
   {
-    display: 'Note',
-    value: 'note',
+    display: 'Skip',
+    value: 'skip',
   },
 ];
 
@@ -57,8 +57,6 @@ class CISSummary extends React.PureComponent {
     const {
       location: urlLocation,
     } = this.props;
-    console.log('StandardSecSummary propcadcasdcass: ', this.props.match.params);
-
     return (
       <div>
         <div className="chart-wrapper top-wrapper">

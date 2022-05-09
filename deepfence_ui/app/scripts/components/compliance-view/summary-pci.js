@@ -6,40 +6,20 @@ import injectModalTrigger from '../common/generic-modal/modal-trigger-hoc';
 
 const testValueConfig = [
   {
-    display: 'Pass',
-    value: 'pass',
+    display: 'Alarm',
+    value: 'alarm',
   },
   {
-    display: 'Fail',
-    value: 'fail',
+    display: 'Ok',
+    value: 'ok',
   },
   {
-    display: 'Not Applicable',
-    value: 'notapplicable',
+    display: 'Info',
+    value: 'info',
   },
   {
-    display: 'Not Selected',
-    value: 'notselected',
-  },
-  {
-    display: 'Unknown',
-    value: 'unknown',
-  },
-  {
-    display: 'Not Checked',
-    value: 'notchecked',
-  },
-  {
-    display: 'Informational',
-    value: 'informational',
-  },
-  {
-    display: 'Error',
-    value: 'error',
-  },
-  {
-    display: 'Fixed',
-    value: 'fixed',
+    display: 'Skip',
+    value: 'skip',
   },
 ];
 
@@ -87,7 +67,7 @@ class PCISummary extends React.PureComponent {
                 e.preventDefault();
                 e.stopPropagation();
                 this.handleViewRules({
-                  checkType: 'pcidss',
+                  checkType: 'pci',
                   label: 'PCI-DSS',
                 });
               }}
@@ -98,7 +78,7 @@ class PCISummary extends React.PureComponent {
           <div className="report">
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
-                checkType="pcidss"
+                checkType="pci"
                 nodeId={this.props.match.params.nodeid}
               />
             </div>
@@ -108,7 +88,7 @@ class PCISummary extends React.PureComponent {
           <div className="table relative">
             <HostReportContainer
             nodeId={this.props.match.params.nodeid}
-              checkType="pcidss"
+              checkType="pci"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}
             />

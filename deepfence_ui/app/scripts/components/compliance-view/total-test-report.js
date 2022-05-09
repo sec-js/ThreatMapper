@@ -75,11 +75,11 @@ class ComplianceTotalTestReport extends React.PureComponent {
         && (
         <div className="total-scan-wrapper">
           <DonutChart
-            data={data}
+            data={data[0]?.aggs}
             chartHeight={550}
             chartWidth={550}
             onSectionClick={this.sectionClickHandler}
-            sum={sum}
+            sum={200}
         />
         </div>
         )}

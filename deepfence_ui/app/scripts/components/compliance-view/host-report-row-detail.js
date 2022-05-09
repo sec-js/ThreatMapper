@@ -82,7 +82,6 @@ class HostReportRowDetail extends React.PureComponent {
       handleDownload,
       isToasterVisible,
     } = this.props;
-    console.log('dataa', this.props.data);
     return (
       <div>
         <DFTable

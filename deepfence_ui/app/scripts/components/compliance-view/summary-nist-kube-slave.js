@@ -6,16 +6,20 @@ import injectModalTrigger from '../common/generic-modal/modal-trigger-hoc';
 
 const testValueConfig = [
   {
-    display: 'Pass',
-    value: 'pass',
+    display: 'Alarm',
+    value: 'alarm',
   },
   {
-    display: 'Fail',
-    value: 'fail',
+    display: 'Ok',
+    value: 'ok',
   },
   {
-    display: 'Warn',
-    value: 'warn',
+    display: 'Info',
+    value: 'info',
+  },
+  {
+    display: 'Skip',
+    value: 'skip',
   },
 ];
 

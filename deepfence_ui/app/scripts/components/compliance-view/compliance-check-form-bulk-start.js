@@ -26,7 +26,7 @@ const COMPLIANCE_SCAN_MENU = [
     label: 'NIST Kube Slave',
   },
   {
-    code: 'pcidss',
+    code: 'pci',
     label: 'PCI-DSS',
   },
   {

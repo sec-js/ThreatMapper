@@ -30,7 +30,7 @@ class ComplianceTestStatusReportContainer extends React.PureComponent {
     const nodeName = nodeDetails.node_name || getHostNameWithoutSemicolon(nodeId);
     const initiatedByPollable = checkTypeReport.get('initiatedByPollable');
     const loading = checkTypeReport.get('loading') && !initiatedByPollable;
-    const data = [];
+    const data = this.props.donutData || [];
     const emptyData = data.length === 0 && !loading;
     return (
       <div>

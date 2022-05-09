@@ -13,6 +13,7 @@ import REPORTS from '../../images/reports.png';
 import MICROSOFT_LOGO from '../../images/microsoft-teams.png';
 import AWS_LOGO from '../../images/aws.png'
 import GOOGLE_CLOUD_LOGO from '../../images/google-cloud.png';
+import AZURE_LOGO from '../../images/m-azure.png'
 import { AwsTerraFormScript } from '../components/compliance-view/aws-scripts';
 import { AzureTerraFormScript } from '../components/compliance-view/azure-scripts';
 import { GcpTerraFormScript } from '../components/compliance-view/gcp-scripts';
@@ -64,7 +65,7 @@ export const COMPLIANCE_TILES_COLLECTION = [
     name: 'gcp_cloud', isActive: true, icon: GOOGLE_CLOUD_LOGO, displayName: 'Google cloud',  bgcolor: 'white', component: GcpTerraFormScript,
   },
   {
-    name: 'microsoft_azure', isActive: false, icon: MICROSOFT_LOGO, displayName: 'Microsoft Azure',  bgcolor: '#0E0E0E', component: AzureTerraFormScript,
+    name: 'microsoft_azure', isActive: false, icon: AZURE_LOGO, displayName: 'Microsoft Azure',  bgcolor: 'white', component: AzureTerraFormScript,
   },
 ];
 

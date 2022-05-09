@@ -22,7 +22,7 @@ class ComplianceTotalTestReportContainer extends React.PureComponent {
   render() {
     const {reportView, checkType, ...rest} = this.props;
     const checkTypeReport = reportView && reportView.get(checkType) || Map();
-    const data = checkTypeReport && checkTypeReport.get('labelled_report') || [];
+    const data =this.props.chartData?.compliance_scan_status|| [];
     const initiatedByPollable = checkTypeReport && checkTypeReport.get('initiatedByPollable');
     const loading = checkTypeReport && checkTypeReport.get('loading') && !initiatedByPollable;
     const emptyData = data.length === 0 && !loading;
@@ -46,7 +46,7 @@ class ComplianceTotalTestReportContainer extends React.PureComponent {
             </div>
           )}
         <ComplianceTotalTestReport
-          data={data}
+          data={ data}
           checkType={checkType}
           {...rest}
         />

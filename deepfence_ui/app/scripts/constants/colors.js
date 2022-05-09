@@ -33,7 +33,7 @@ export const complianceColors = {
   high: dfStyle.severityColorHigh,
   medium: dfStyle.severityColorMedium,
   low: dfStyle.severityColorLow,
-  warn: dfStyle.severityColorCritical,
+  alarm: dfStyle.severityColorCritical,
   fail: dfStyle.severityColorCritical,
   note: dfStyle.severityColorMedium,
   error: dfStyle.severityColorMedium,
@@ -41,7 +41,7 @@ export const complianceColors = {
   informational: dfStyle.severityColorLow,
   total: dfStyle.severityColorLow,
   scanned: dfStyle.severityColorHigh,
-  pass: dfStyle.passColor,
+  ok: dfStyle.passColor,
 };
 
 export const complianceColorsShade = {
@@ -49,7 +49,7 @@ export const complianceColorsShade = {
   high: dfStyle.severityColorHighShade,
   medium: dfStyle.severityColorMediumShade,
   low: dfStyle.severityColorLowShade,
-  warn: dfStyle.severityColorCriticalShade,
+  alarm: dfStyle.severityColorCriticalShade,
   fail: dfStyle.severityColorCriticalShade,
   note: dfStyle.severityColorMediumShade,
   error: dfStyle.severityColorMediumShade,
@@ -57,7 +57,7 @@ export const complianceColorsShade = {
   informational: dfStyle.severityColorLowShade,
   total: dfStyle.severityColorLowShade,
   scanned: dfStyle.severityColorHighShade,
-  pass: dfStyle.passColorShade,
+  ok: dfStyle.passColorShade,
 };
 
 export const severityColorsSunBurst = ({ path }) => {

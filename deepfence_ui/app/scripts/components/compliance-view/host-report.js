@@ -213,7 +213,6 @@ class HostReport extends React.PureComponent {
       savedTablePageNumber = 0,
       scanList = []
     } = this.props;
-    console.log('this props', this.props);
     const {expandedRowIndex} = this.state;
     const testValueColumnsWithHeaders = testValueConfig.map(el => ({
       Header: el.display,
@@ -239,7 +238,7 @@ class HostReport extends React.PureComponent {
     }];
     const testValueColumnsWithValues = testValueConfig.map(el => ({
       Header: el.value,
-      accessor: `results.${el.value}`,
+      accessor: `result.${el.value}`,
       maxWidth: 90,
       Cell: row => (
         <div>

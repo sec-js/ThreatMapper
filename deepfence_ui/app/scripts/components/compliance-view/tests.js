@@ -1,7 +1,9 @@
+/* eslint-disable dot-notation */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable */
 import React from 'react';
+import { connect } from 'react-redux';
 import DFTable from '../common/df-table/index';
 import {
   getComplianceTestAction,
@@ -270,10 +272,13 @@ class ComplianceTests extends React.PureComponent {
 
 
   render() {
-    const {
-      tests = [], total, checkType, multiSelectColumn
+    const { test = [], total, checkType, multiSelectColumn
     } = this.props;
-    console.log('this.props', this.props);
+
+    const tests = [];
+    test.hits?.forEach(t => {
+      tests.push(t._source);
+    })
     // const noDataText = `${checkType.toUpperCase()} compliance check could not be found`;
     const noDataText = `Compliance check could not be found`;
     return (
@@ -324,29 +329,24 @@ class ComplianceTests extends React.PureComponent {
                 </div>
               ),
             },
-            {
-              Header: 'Category',
-              accessor: 'test_category',
-              sortable: false,
-            },
+            // {
+            //   Header: 'Category',
+            //   accessor: 'test_category',
+            //   sortable: false,
+            // },
             {
               Header: 'Description',
-              accessor: row => ({
-                desc: row.test_desc,
-                /* eslint-disable no-underscore-dangle */
-                id: row._id,
-                /* eslint-enable */
-              }),
+              accessor: 'description',
               id: 'test_desc',
               sortable: false,
-              Cell: row => (
-                <span
-                  className="clickable"
-                  title={row.value.desc}
-                >
-                  {row.value.desc}
-                </span>
-              ),
+              // Cell: row => (
+              //   <span
+              //     className="clickable"
+              //     title={row.value.description}
+              //   >
+              //     {row.value.description}
+              //   </span>
+              // ),
               minWidth: 400,
             },
             multiSelectColumn,
@@ -370,7 +370,16 @@ class ComplianceTests extends React.PureComponent {
   }
 }
 
-const PollableComplianceTests = pollable()(ComplianceTests);
+
+
+function mapStateToProps(state) {
+  return {
+    test: state.get('compliance_result_scans'),
+    isTableJSONViewModal: state.get('isTableJSONViewModal'),
+  };
+}
+
+const PollableComplianceTests = connect(mapStateToProps)(pollable()(ComplianceTests));
 
 export default withMultiSelectColumn({
   name: 'compliance-test',

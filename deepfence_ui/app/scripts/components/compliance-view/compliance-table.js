@@ -22,7 +22,6 @@ const ComplianceTable = withRouter((props) => {
   const {triggerModal, showModal} = props;
 
   useEffect(() => {
-    console.log(props);
     dispatch(getComplianceCloudCredentialsAction({cloud_provider: props.cloudType}));
   }, []);
 
@@ -41,7 +40,6 @@ const ComplianceTable = withRouter((props) => {
   };
 
   const rowClickHandler = row => {
-    console.log('row', row);
     props.history.push(`/compliance/aws/${row.original.node_id}/standard`);
   };
 

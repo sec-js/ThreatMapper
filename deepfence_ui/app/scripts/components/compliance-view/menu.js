@@ -33,10 +33,10 @@ export const complianceViewMenu = [
     link: '/compliance/nist_slave',
   },
   {
-    id: 'pcidss',
+    id: 'pci',
     displayName: 'PCI-DSS',
     component: PCISummary,
-    link: '/compliance/pcidss',
+    link: '/compliance/pci',
   },
   {
     id: 'hipaa',
