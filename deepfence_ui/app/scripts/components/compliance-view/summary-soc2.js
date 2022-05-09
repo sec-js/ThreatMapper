@@ -29,7 +29,7 @@ const testValueConfig = [
 //   />
 // );
 
-class NISTKubeMasterSummary extends React.PureComponent {
+class Soc2Summary extends React.PureComponent {
   // handleViewRules({
   //   checkType,
   //   label,
@@ -37,7 +37,6 @@ class NISTKubeMasterSummary extends React.PureComponent {
   //   const {
   //     triggerModal,
   //   } = this.props;
-
   //   triggerModal('GENERIC_MODAL', {
   //     title: `Compliance Controls (${label})`,
   //     modalContent: () => renderModalContent(checkType),
@@ -67,8 +66,8 @@ class NISTKubeMasterSummary extends React.PureComponent {
                 e.preventDefault();
                 e.stopPropagation();
                 this.handleViewRules({
-                  checkType: 'nist_master',
-                  label: 'NIST master',
+                  checkType: 'soc2',
+                  label: 'SOC2'
                 });
               }}
             >
@@ -78,7 +77,7 @@ class NISTKubeMasterSummary extends React.PureComponent {
           <div className="report">
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
-                checkType="nist_master"
+                checkType="soc2"
                 nodeId={this.props.match.params.nodeid}
               />
             </div>
@@ -88,7 +87,7 @@ class NISTKubeMasterSummary extends React.PureComponent {
           <div className="table relative">
             <HostReportContainer
             nodeId={this.props.match.params.nodeid}
-              checkType="nist_master"
+              checkType="soc2"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}
             />
@@ -98,4 +97,5 @@ class NISTKubeMasterSummary extends React.PureComponent {
     );
   }
 }
-export default injectModalTrigger(NISTKubeMasterSummary);
+
+export default injectModalTrigger(Soc2Summary);

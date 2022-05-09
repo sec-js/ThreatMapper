@@ -62,10 +62,10 @@ export const COMPLIANCE_TILES_COLLECTION = [
     name: 'aws', isActive: true, icon: AWS_LOGO, displayName: 'AWS', bgcolor: 'white', component: AwsTerraFormScript ,
   },
   {
-    name: 'gcp_cloud', isActive: true, icon: GOOGLE_CLOUD_LOGO, displayName: 'Google cloud',  bgcolor: 'white', component: GcpTerraFormScript,
+    name: 'google_cloud', isActive: true, icon: GOOGLE_CLOUD_LOGO, displayName: 'Google cloud',  bgcolor: 'white', component: GcpTerraFormScript,
   },
   {
-    name: 'microsoft_azure', isActive: false, icon: AZURE_LOGO, displayName: 'Microsoft Azure',  bgcolor: 'white', component: AzureTerraFormScript,
+    name: 'azure', isActive: false, icon: AZURE_LOGO, displayName: 'Microsoft Azure',  bgcolor: 'white', component: AzureTerraFormScript,
   },
 ];
 

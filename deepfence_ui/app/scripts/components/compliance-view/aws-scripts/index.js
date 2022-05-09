@@ -129,7 +129,7 @@ module "deepfence-compliance" {
           </pre>
         </div>
       </div>
-      < ComplianceTable cloudType='aws' />
+      < ComplianceTable cloudType={props.match.params.cloudType} />
       <Route
         exact
         path={`${props.match.path}/:id`}

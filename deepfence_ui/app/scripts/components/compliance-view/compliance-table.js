@@ -40,7 +40,7 @@ const ComplianceTable = withRouter((props) => {
   };
 
   const rowClickHandler = row => {
-    props.history.push(`/compliance/aws/${row.original.node_id}/standard`);
+    props.history.push(`/compliance/${props.cloudType}/${row.original.node_id}/standard`);
   };
 
 

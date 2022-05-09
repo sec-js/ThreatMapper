@@ -121,7 +121,7 @@ module "deepfence-compliance-single-project" {
           </pre>
         </div>
       </div>
-      <ComplianceTable cloudType='google_cloud' />
+      <ComplianceTable cloudType={props.match.params.cloudType} />
     </>
   );
 });

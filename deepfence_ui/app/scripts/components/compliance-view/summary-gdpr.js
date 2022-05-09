@@ -29,7 +29,7 @@ const testValueConfig = [
 //   />
 // );
 
-class StandardSecSummary extends React.PureComponent {
+class GdprSummary extends React.PureComponent {
   // handleViewRules({
   //   checkType,
   //   label,
@@ -67,8 +67,8 @@ class StandardSecSummary extends React.PureComponent {
                 e.preventDefault();
                 e.stopPropagation();
                 this.handleViewRules({
-                  checkType: 'standard',
-                  label: 'System Hardening',
+                  checkType: 'gdpr',
+                  label: 'GDPR',
                 });
               }}
             >
@@ -78,7 +78,7 @@ class StandardSecSummary extends React.PureComponent {
           <div className="report">
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
-                checkType="standard"
+                checkType="gdpr"
                 nodeId={this.props.match.params.nodeid}
               />
             </div>
@@ -87,7 +87,7 @@ class StandardSecSummary extends React.PureComponent {
         <div className="chart-wrapper table-wrapper">
           <div className="table relative">
             <HostReportContainer
-              checkType="standard"
+              checkType="gdpr"
               nodeId={this.props.match.params.nodeid}
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}
@@ -99,4 +99,4 @@ class StandardSecSummary extends React.PureComponent {
   }
 }
 
-export default injectModalTrigger(StandardSecSummary);
+export default injectModalTrigger(GdprSummary);

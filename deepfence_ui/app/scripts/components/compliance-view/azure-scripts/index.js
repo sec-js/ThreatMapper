@@ -125,7 +125,7 @@ module "deepfence-compliance-single-subscription" {
           </pre>
         </div>
       </div>
-      <ComplianceTable cloudType='azure' />
+      <ComplianceTable cloudType={props.match.params.cloudType} />
     </>
   );
 });

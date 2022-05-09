@@ -29,7 +29,7 @@ const testValueConfig = [
 //   />
 // );
 
-class MissionCriticalSummary extends React.PureComponent {
+class NISTSummary extends React.PureComponent {
   // handleViewRules({
   //   checkType,
   //   label,
@@ -37,6 +37,7 @@ class MissionCriticalSummary extends React.PureComponent {
   //   const {
   //     triggerModal,
   //   } = this.props;
+
   //   triggerModal('GENERIC_MODAL', {
   //     title: `Compliance Controls (${label})`,
   //     modalContent: () => renderModalContent(checkType),
@@ -66,8 +67,8 @@ class MissionCriticalSummary extends React.PureComponent {
                 e.preventDefault();
                 e.stopPropagation();
                 this.handleViewRules({
-                  checkType: 'mission_critical_classified',
-                  label: 'Mission Critical Classified'
+                  checkType: 'nist',
+                  label: 'NIST',
                 });
               }}
             >
@@ -77,7 +78,7 @@ class MissionCriticalSummary extends React.PureComponent {
           <div className="report">
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
-                checkType="mission_critical_classified"
+                checkType="nist"
                 nodeId={this.props.match.params.nodeid}
               />
             </div>
@@ -87,7 +88,7 @@ class MissionCriticalSummary extends React.PureComponent {
           <div className="table relative">
             <HostReportContainer
             nodeId={this.props.match.params.nodeid}
-              checkType="mission_critical_classified"
+              checkType="nist"
               testValueConfig={testValueConfig}
               urlLocation={urlLocation}
             />
@@ -97,5 +98,4 @@ class MissionCriticalSummary extends React.PureComponent {
     );
   }
 }
-
-export default injectModalTrigger(MissionCriticalSummary);
+export default injectModalTrigger(NISTSummary);
