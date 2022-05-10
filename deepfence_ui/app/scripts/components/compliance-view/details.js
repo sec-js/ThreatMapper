@@ -57,9 +57,10 @@ class ComplianceDetailsView extends React.PureComponent {
     const scanIdWithoutChecktype = scanId.replace(checkType, '');
     const lastUnderscoreIndex = scanIdWithoutChecktype.lastIndexOf('_');
     const firstUnderscoreIndex = scanIdWithoutChecktype.indexOf('_');
-    const nodeId = scanId.replace(checkType, '');
+    const nodeId = scanId.substring(0, scanId.indexOf('>') + 1)
     const timeOfScanStr = scanIdWithoutChecktype.substring(lastUnderscoreIndex + 1);
     const timeOfScan = moment.utc(timeOfScanStr);
+    let cloudType = '';
 
     const { isSideNavCollapsed, isFiltersViewVisible} = this.props;
     const divClassName = classnames(
@@ -70,7 +71,13 @@ class ComplianceDetailsView extends React.PureComponent {
       'navigation',
       {'with-filters': isFiltersViewVisible},
     );
-    console.log('details props', this.props);
+    if(scanId.includes('aws')) {
+      cloudType = 'aws'
+    } else if (scanId.includes('azure')) {
+      cloudType = 'azure'
+    } else if (scanId.includes('gcp_cloud')) {
+      cloudType = 'gcp_cloud'
+    }
     return (
       <div className="compliance-details">
         <SideNavigation
@@ -80,7 +87,7 @@ class ComplianceDetailsView extends React.PureComponent {
         <div className={divClassName}>
           <HeaderView />
           <div className="" style={{paddingTop: '64px'}} />
-          <div className="go-back-btn" onClick={() => this.props.history.push('/compliance')}>
+          <div className="go-back-btn" onClick={() => this.props.history.push(`/compliance/${cloudType}/${nodeId}/standard/${this.props.match.params.checkType}`)}>
           <i className="fa fa-arrow-left" aria-hidden="true" />{' '}
           <span
             style={{ paddingLeft: '5px', color: '#0276C9', fontSize: '15px' }}
