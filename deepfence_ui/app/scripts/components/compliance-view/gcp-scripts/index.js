@@ -54,28 +54,10 @@ export const GcpTerraFormScript = withRouter((props) => {
       <div style={{ marginTop: '57px' }}>
         <p1>
         Deploy Deepfence Compliance Scanner with Terraform using the
-          code samples below for a single subscription.
+          code samples below for a single project.
           </p1>
       </div>
-      <h6 style={{ color: 'white', marginTop: '20px' }}> Single subscription </h6>
-      <div style={{ display: 'flex', marginTop: '40px' }}>
-        <span style={{ marginTop: '4px' }}> Project Id: </span>
-        <input type="text" placeholder="Project Id" />
-        <div style={{ marginLeft: '10px' }}>
-          <Select
-           components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
-           styles={styles}
-           theme={themeCb}
-           placeholder="US EAST-01"
-           options={options}
-           value={options.value}
-           classNamePrefix="select"
-           className="select-filter"
-          // onChange={addRegion}
-          />
-        </div>
-      </div>
-
+      <h6 style={{ color: 'white', marginTop: '20px' }}> Single project </h6>
       <div style={{ marginTop: '15px' }}>
         <span style={{ fontSize: '11px' }}>
           Copy the code below and paste it into a .tf file on your local
