@@ -41,6 +41,9 @@ const styles = {
 };
 
 export const GcpTerraFormScript = withRouter((props) => {
+    const options = [ {
+        label: 'USE EAST-01', value: 'US EAST-01'
+    }] ; 
   return (
     <>
       <div className="btn-wrapper" style={{ justifyContent: 'left' }}>
@@ -50,13 +53,9 @@ export const GcpTerraFormScript = withRouter((props) => {
       </div>
       <div style={{ marginTop: '57px' }}>
         <p1>
-          Deploy Deepfence Compliance Scanner for cloud with Terraform using the
-          code samples below. Deploy all modules for Deepfence Compliance
-          Scanner for cloud for a single subscription.
-          <br />
-          Note: To apply the Terraform, the Azure cloud user should have
-          Contributor and Security Administrator roles.
-        </p1>
+        Deploy Deepfence Compliance Scanner with Terraform using the
+          code samples below for a single subscription.
+          </p1>
       </div>
       <h6 style={{ color: 'white', marginTop: '20px' }}> Single subscription </h6>
       <div style={{ display: 'flex', marginTop: '40px' }}>
@@ -64,16 +63,14 @@ export const GcpTerraFormScript = withRouter((props) => {
         <input type="text" placeholder="Project Id" />
         <div style={{ marginLeft: '10px' }}>
           <Select
-            components={{
-              IndicatorSeparator: null,
-            }}
-            styles={styles}
-            theme={themeCb}
-            placeholder="US EAST-01"
-            // options={options}
-            // value={options.value}
-            classNamePrefix="select"
-            className="select-filter"
+           components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
+           styles={styles}
+           theme={themeCb}
+           placeholder="US EAST-01"
+           options={options}
+           value={options.value}
+           classNamePrefix="select"
+           className="select-filter"
           // onChange={addRegion}
           />
         </div>

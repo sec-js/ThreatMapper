@@ -4,6 +4,7 @@
 /* eslint-disable */
 import React from 'react';
 import { connect } from 'react-redux';
+import { DfTableV2 } from '../common/df-table-v2';
 import DFTable from '../common/df-table/index';
 import {
   getComplianceTestAction,
@@ -26,6 +27,7 @@ class ComplianceTests extends React.PureComponent {
     this.getComplianceTest = this.getComplianceTest.bind(this);
     this.handleDescClick = this.handleDescClick.bind(this);
     this.tableChangeHandler = this.tableChangeHandler.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
     this.unmaskDocs = this.unmaskDocs.bind(this);
     this.maskDocs = this.maskDocs.bind(this);
     this.removeDocs = this.removeDocs.bind(this);
@@ -231,6 +233,12 @@ class ComplianceTests extends React.PureComponent {
     updatePollParams(params);
   }
 
+  handlePageChange(pageNumber) {
+    this.tableChangeHandler({
+      page: pageNumber
+    })
+  }
+
   getComplianceTest(params = {}) {
     const {
       dispatch,
@@ -238,14 +246,12 @@ class ComplianceTests extends React.PureComponent {
       scanId,
       checkType,
     } = this.props;
+    const pageSize = 20;
+    const page = 0;
     const {
-      page = 0,
-      pageSize = 20,
+      size = pageSize,
       sorted = [],
       globalSearchQuery = [],
-      // eslint-disable-next-line react/destructuring-assignment
-      alertPanelHistoryBound = this.props.alertPanelHistoryBound || {},
-      hideMasked,
     } = params;
     const cloudType = 'aws';
     const sortArr = sorted.map(el => (
@@ -255,7 +261,7 @@ class ComplianceTests extends React.PureComponent {
       }
     ));
     // TODO: Server support for sort by multiple fields
-    return dispatch(getScanResultsAction({nodeId, scanId, checkType, cloudType }));
+    return dispatch(getScanResultsAction({nodeId, scanId, checkType, cloudType, ...params}));
   }
 
   handleDescClick(docId) {
@@ -287,7 +293,7 @@ class ComplianceTests extends React.PureComponent {
           noDataText={noDataText}
           showPagination
           defaultPageSize={20}
-          pages={total}
+          pages={test.total}
           data={tests}
           multiSort={false}
           minRows={0}
@@ -295,6 +301,7 @@ class ComplianceTests extends React.PureComponent {
           columnCustomize
           name="compliance-tests"
           onFetchData={this.tableChangeHandler}
+          onPageChange={this.handlePageChange}
           getTrProps={(state, rowInfo) => (
             {
               style: {

@@ -89,7 +89,7 @@ class ComplianceTestStatusReport extends React.PureComponent {
           chartHeight={200}
           chartWidth={200}
           innerRadius={0.7}
-          onSectionClick={this.sectionClickHandler}
+          // onSectionClick={this.sectionClickHandler}
         />
         {/* <div className="totalscaned">{subtitle}</div> */}
       </div>

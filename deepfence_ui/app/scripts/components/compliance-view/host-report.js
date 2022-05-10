@@ -242,7 +242,7 @@ class HostReport extends React.PureComponent {
       maxWidth: 90,
       Cell: row => (
         <div>
-          <div className={`compliance-${checkType}-${el.value} value`}>
+          <div >
             {row.value || 0}
           </div>
         </div>

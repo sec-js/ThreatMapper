@@ -68,7 +68,8 @@ class ComplianceTotalTestReport extends React.PureComponent {
 
   render() {
     const {data = []} = this.props;
-    const sum = data.map(content => content.value).reduce((a, c) => a + c, 0);
+    const sumData = data[0]?.aggs || [];
+    const sum = sumData.map(content => content.value).reduce((a, c) => a + c, 0);
     return (
       <div>
         { sum !== 0
@@ -78,8 +79,8 @@ class ComplianceTotalTestReport extends React.PureComponent {
             data={data[0]?.aggs}
             chartHeight={550}
             chartWidth={550}
-            onSectionClick={this.sectionClickHandler}
-            sum={200}
+            // onSectionClick={this.sectionClickHandler}
+            sum={sum}
         />
         </div>
         )}

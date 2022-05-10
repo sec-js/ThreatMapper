@@ -202,8 +202,8 @@ const ComplianceTable = withRouter((props) => {
                   allowHTML
                   content={(
                     <div className="row-action-dropdown-wrapper">
-                      <div className="row-action-dropdown-item" onClick={() => {
-                        // e.stopPropagation();
+                      <div className="row-action-dropdown-item" onClick={(e) => {
+                        e.stopPropagation();
                         triggerComplianceScanModal();
                       }}>
                         <div className="row-action-item-icon">

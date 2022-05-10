@@ -104,11 +104,6 @@ class HostReportRowDetail extends React.PureComponent {
               id: 'timestamp',
               // minWidth: 290,
             },
-            {
-              Header: 'Compliance',
-              accessor: 'compliant',
-              maxWidth: 130,
-            },
             ...testValueColumns,
             {
               Header: '',

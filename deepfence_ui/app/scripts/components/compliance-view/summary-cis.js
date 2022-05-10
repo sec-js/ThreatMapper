@@ -11,7 +11,7 @@ const testValueConfig = [
   },
   {
     display: 'Ok',
-    value: 'warn',
+    value: 'ok',
   },
   {
     display: 'Info',
@@ -64,7 +64,7 @@ class CISSummary extends React.PureComponent {
             <h4>Compliance tests</h4>
             <h5>Overview of the overall compliance</h5>
           </div>
-          <div className="pull-right pull-right-control">
+          {/* <div className="pull-right pull-right-control">
             <button
               type="button"
               className="primary-btn"
@@ -79,7 +79,7 @@ class CISSummary extends React.PureComponent {
             >
               View Controls
             </button>
-          </div>
+          </div> */}
           <div className="report">
             <div className="total-test-report">
               <ComplianceTotalTestReportContainer
