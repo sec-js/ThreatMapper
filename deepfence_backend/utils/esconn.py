@@ -485,7 +485,6 @@ class ESConn:
         res = EL_CLIENT.search(index=index_name, body=query, sort=sort, ignore=[400],
                                _source=_source)
 
-        print("query", query)
         if 'error' in res:
             return {
                 'hits': [],

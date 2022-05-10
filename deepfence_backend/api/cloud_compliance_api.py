@@ -184,6 +184,12 @@ def compliance_test_status_report(compliance_check_type):
             raise InvalidUsage("Request data invalid")
         filters = request.json.get("filters", {})
     filters["compliance_check_type"] = compliance_check_type
+    node_id = request.json.get("node_id", "")
+    scan_id = request.json.get("scan_id", "")
+    if node_id:
+        filters["node_id"] = node_id
+    if scan_id:
+        filters["scan_id"] = scan_id
     aggs = {
         "scan_id": {
             "terms": {
@@ -250,6 +256,12 @@ def compliance_test_category_report(compliance_check_type):
             raise InvalidUsage("Request data invalid")
         filters = request.json.get("filters", {})
     filters["compliance_check_type"] = compliance_check_type
+    node_id = request.json.get("node_id", "")
+    scan_id = request.json.get("scan_id", "")
+    if node_id:
+        filters["node_id"] = node_id
+    if scan_id:
+        filters["scan_id"] = scan_id
     aggs = {
         "node_id": {
             "terms": {
@@ -257,9 +269,9 @@ def compliance_test_category_report(compliance_check_type):
                 "size": ES_TERMS_AGGR_SIZE
             },
             "aggs": {
-                "group": {
+                "service": {
                     "terms": {
-                        "field": "group.keyword",
+                        "field": "service.keyword",
                         "size": 25
                     },
                     "aggs": {
@@ -287,13 +299,11 @@ def compliance_test_category_report(compliance_check_type):
 
     if "aggregations" in aggs_response:
         for node_aggr in aggs_response["aggregations"]["node_id"]["buckets"]:
-            for category_aggr in node_aggr["group"]["buckets"]:
-                data = {}
-                data["node"] = category_aggr.get("key")
+            for category_aggr in node_aggr["service"]["buckets"]:
+                data = {"node": category_aggr.get("key")}
                 for status_aggr in category_aggr["status"]["buckets"]:
-                    data["value"] = status_aggr.get("doc_count")
-                    data["type"] = status_aggr.get("key")
-                    response.append(data)
+                    status_data = {"value": status_aggr.get("doc_count"), "type": status_aggr.get("key"), **data}
+                    response.append(status_data)
 
     return set_response(data=response)
 
