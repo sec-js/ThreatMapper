@@ -41,6 +41,10 @@ const styles = {
 };
 
 export const AwsTerraFormScript = withRouter((props) => {
+
+  const options = [ {
+      label: 'USE EAST-01', value: 'US EAST-01'
+  }]  
   return (
     <>
       <div className="btn-wrapper" style={{ justifyContent: 'left' }}>
@@ -56,9 +60,8 @@ export const AwsTerraFormScript = withRouter((props) => {
       </div>
       <div style={{ marginTop: '57px' }}>
         <p1>
-          Deploy Deepfence Compliance Scanner for cloud with Terraform using the
-          code samples below. Deploy all modules for Deepfence Compliance
-          Scanner for cloud for a single account.
+         Deploy all modules for Deepfence Compliance
+         Scanner for a single account.
           <br />
           For information on AWS Organizations and account types, see AWS docs.
         </p1>
@@ -68,14 +71,12 @@ export const AwsTerraFormScript = withRouter((props) => {
         <span style={{ marginTop: '4px' }}> Region: </span>
         <div style={{ marginLeft: '10px' }}>
           <Select
-            components={{
-              IndicatorSeparator: null,
-            }}
+            components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
             styles={styles}
             theme={themeCb}
             placeholder="US EAST-01"
-            // options={options}
-            // value={options.value}
+            options={options}
+            value={options.value}
             classNamePrefix="select"
             className="select-filter"
           // onChange={addRegion}

@@ -14,7 +14,7 @@ class ComplianceTestStatusReportContainer extends React.PureComponent {
 
   componentDidMount() {
     const { checkType, scanId, nodeId} = this.props;
-    this.props.dispatch(getResultDonutDataAction({checkType, nodeId}));
+    this.props.dispatch(getResultDonutDataAction({checkType, scanId}));
   }
 
   render() {
