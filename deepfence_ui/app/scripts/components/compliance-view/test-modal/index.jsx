@@ -15,7 +15,7 @@ export const ComplianceTestModal = ({
   data,
   onRequestClose,
 }) => {
-  const source = data._source;
+  const source = data;
   const dispatch = useDispatch();
 
   const copyToClipboard = useCallback(() => {
@@ -33,8 +33,8 @@ export const ComplianceTestModal = ({
         onRequestClose={onRequestClose}
         data={[{
           key: <div>Description</div>,
-          value: source?.test_desc,
-          valueAsText: source?.test_desc ?? ''
+          value: source?.description,
+          valueAsText: source?.description ?? ''
         }, {
           key: <div>Status</div>,
           value: <Severiety severiety={source?.status === 'fail' ? 'critical' : 'low'} text={source?.status} />,

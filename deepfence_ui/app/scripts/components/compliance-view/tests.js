@@ -265,14 +265,17 @@ class ComplianceTests extends React.PureComponent {
   }
 
   handleDescClick(docId) {
-    const { testIndex = {} } = this.props;
-    const test = testIndex[docId];
-    if (test !== undefined) {
-      this.setState({
-        testData: test,
-        isTestModalOpen: true
-      });
-    }
+    const { test } = this.props;
+    const testResult =[];
+    test.hits?.forEach(t => {
+      if(t._id === docId) {
+        testResult.push(t._source);
+    }});
+
+    this.setState({
+      testData: testResult[0],
+      isTestModalOpen: true
+    });
   }
 
 
