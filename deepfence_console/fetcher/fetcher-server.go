@@ -33,14 +33,15 @@ const (
 )
 
 var (
-	postgresDb             *sql.DB
-	psqlInfo               string
-	redisPool              *redis.Pool
-	esClient               *elastic.Client
-	vulnerabilityDbUpdater *VulnerabilityDbUpdater
-	cveIndexName           = convertRootESIndexToCustomerSpecificESIndex("cve")
-	cveScanLogsIndexName   = convertRootESIndexToCustomerSpecificESIndex("cve-scan")
-	sbomArtifactsIndexName = convertRootESIndexToCustomerSpecificESIndex("sbom-artifact")
+	postgresDb               *sql.DB
+	psqlInfo                 string
+	redisPool                *redis.Pool
+	esClient                 *elastic.Client
+	vulnerabilityDbUpdater   *VulnerabilityDbUpdater
+	cveIndexName             = convertRootESIndexToCustomerSpecificESIndex("cve")
+	cveScanLogsIndexName     = convertRootESIndexToCustomerSpecificESIndex("cve-scan")
+	sbomArtifactsIndexName   = convertRootESIndexToCustomerSpecificESIndex("sbom-artifact")
+	cloudComplianceIndexName = convertRootESIndexToCustomerSpecificESIndex("cloud-compliance-scan")
 )
 
 type VulnerabilityDbDetail struct {
@@ -814,6 +815,30 @@ func packetCaptureConfig(respWrite http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(respWrite, string(captureConfig))
 }
 
+type CloudComplianceDoc struct {
+	DocId               string `json:"doc_id"`
+	Timestamp           string `json:"@timestamp"`
+	Count               int    `json:"count"`
+	Reason              string `json:"reason"`
+	Resource            string `json:"resource"`
+	Status              string `json:"status"`
+	Region              string `json:"region"`
+	AccountID           string `json:"account_id"`
+	Group               string `json:"group"`
+	Service             string `json:"service"`
+	Title               string `json:"title"`
+	ComplianceCheckType string `json:"compliance_check_type"`
+	CloudProvider       string `json:"cloud_provider"`
+	NodeName            string `json:"node_name"`
+	NodeID              string `json:"node_id"`
+	ScanID              string `json:"scan_id"`
+	Masked              string `json:"masked"`
+	Type                string `json:"type"`
+	ControlID           string `json:"control_id"`
+	Description         string `json:"description"`
+	Severity            string `json:"severity"`
+}
+
 type dfCveStruct struct {
 	Count                      int     `json:"count"`
 	Timestamp                  string  `json:"@timestamp"`
@@ -933,6 +958,24 @@ func ingestInBackground(docType string, body []byte) error {
 				}
 			}
 		}
+	} else if docType == cloudComplianceIndexName {
+		var complianceDocs []CloudComplianceDoc
+		err := json.Unmarshal(body, &complianceDocs)
+		if err != nil {
+			return err
+		}
+		bulkService := elastic.NewBulkService(esClient)
+		for _, complianceDoc := range complianceDocs {
+			docId := fmt.Sprintf("%x", md5.Sum([]byte(complianceDoc.ScanID+complianceDoc.ControlID+complianceDoc.Resource)))
+			complianceDoc.DocId = docId
+			event, err := json.Marshal(complianceDoc)
+			if err == nil {
+				bulkIndexReq := elastic.NewBulkIndexRequest()
+				bulkIndexReq.Index(cloudComplianceIndexName).Id(docId).Doc(string(event))
+				bulkService.Add(bulkIndexReq)
+			}
+		}
+		bulkService.Do(context.Background())
 	} else {
 		bulkService := elastic.NewBulkService(esClient)
 		bulkIndexReq := elastic.NewBulkIndexRequest()
