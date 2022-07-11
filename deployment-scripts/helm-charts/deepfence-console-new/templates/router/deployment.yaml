@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deepfence-router
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: deepfence-console
     name: deepfence-router
@@ -27,44 +27,11 @@ spec:
       serviceAccountName: {{ .Values.serviceAccountName }}
       containers:
         - name: deepfence-router
-          image: "{{ .Values.router.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.registry.imagePrefix }}{{ .Values.router.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.router.image.pullPolicy }}
           env:
-            - name: POSTGRES_USER_DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_host
-            - name: POSTGRES_USER_DB_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_port
-            - name: POSTGRES_USER_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_user
-            - name: POSTGRES_USER_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_password
-            - name: POSTGRES_USER_DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_users_db_name
-            - name: POSTGRES_USER_DB_SSLMODE
-              valueFrom:
-                secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_ssl_mode
-            - name: OPERATING_MODE
-              value: "k8s"
-            - name: SERVICE_NAME_SUFFIX
-              value: ".{{ .Values.namespace }}.svc.cluster.local"
-
+          - name: ENABLE_AUTH
+            value: "true"
           ports:
             - name: http
               containerPort: 80

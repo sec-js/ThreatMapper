@@ -2,7 +2,7 @@ apiVersion:  apps/v1
 kind: Deployment
 metadata:
   name: deepfence-internalRouter
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: deepfence-console
     name: deepfence-internal-router
@@ -31,40 +31,6 @@ spec:
         env:
           - name: ENABLE_AUTH
             value: "false"
-          - name: POSTGRES_USER_DB_HOST
-            valueFrom:
-              secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_host
-          - name: POSTGRES_USER_DB_PORT
-            valueFrom:
-              secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_port
-          - name: POSTGRES_USER_DB_USER
-            valueFrom:
-              secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_user
-          - name: POSTGRES_USER_DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_password
-          - name: POSTGRES_USER_DB_NAME
-            valueFrom:
-              secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_users_db_name
-          - name: POSTGRES_USER_DB_SSLMODE
-            valueFrom:
-              secretKeyRef:
-                  name: pg-secret-{{ include "deepfence-console.fullname" . }}
-                  key: pg_ssl_mode
-          - name: OPERATING_MODE
-            value: "k8s"
-          - name: SERVICE_NAME_SUFFIX
-            value: ".{{ .Values.namespace }}.svc.cluster.local"
         volumeMounts:
         {{- if .Values.tls.pemfile }}
           - name: deepfence-cert-volume

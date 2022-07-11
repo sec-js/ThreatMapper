@@ -12,9 +12,6 @@ registry:
   # https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   createRegistrySecret: "true"
 
-# Set this value to false if using external secrets file
-createDeepfenceNamespace: "true"
-
 image:
   # deepfence agent runs as a daemonset in all nodes in the cluster
   name: deepfenceio/deepfence_agent_ce
@@ -25,15 +22,13 @@ image:
   pullPolicy: Always
   pullSecretName: deepfence-docker-secret
 
-managementConsoleUrl: ""
+managementConsoleUrl: "oss.deepfence.host"
 managementConsolePort: "443"
 
 # Auth: Get deepfence api key from UI -> Settings -> User Management
-deepfenceKey: ""
+deepfenceKey: "1b6b5166-d5ae-46c0-9d14-7c2fadbcb5fc"
 # If kubernetes secret is already defined externally, change following value to false
 createDeepfenceKeySecret: "true"
-
-namespace: deepfence
 
 # Suffix cloud instance id to hostnames
 instanceIdSuffix: "N"

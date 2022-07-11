@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deepfence-redis
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "deepfence-console.labels" . | nindent 4 }}
     app: deepfence-console
@@ -40,7 +40,7 @@ spec:
       serviceAccountName: {{ .Values.serviceAccountName }}
       containers:
         - name: deepfence-redis
-          image: "{{ .Values.redis.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.registry.imagePrefix }}{{ .Values.redis.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: Always
           env:
             - name: INITIALIZE_REDIS

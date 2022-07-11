@@ -102,8 +102,6 @@ mountContainerRuntimeSocket:
 
 # Optionally set node affinity for topology pod
 topologyNodeAffinityHostName: ""
-# Optionally set node affinity for backend pod
-backendNodeAffinityHostName: ""
 
 topologyResources:
   requests:
@@ -130,8 +128,6 @@ defaultResourceLimits:
     cpu: 16000m
     memory: 32Gi
 setDefaultResourceLimits: "false"
-
-enablePacketCaptureService: "true"
 
 serviceAccountName: deepfence-console
 

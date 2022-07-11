@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deepfence-api
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "deepfence-console.labels" . | nindent 4 }}
     app: deepfence-console
@@ -24,31 +24,9 @@ spec:
     spec:
       imagePullSecrets:
         - name: {{ .Values.image.pullSecretName }}
-      serviceAccountName: {{ .Values.serviceAccountName }}
-      volumes:
-{{- if eq .Values.mountContainerRuntimeSocket.dockerSock "true" }}
-        - name: docker-sock
-          hostPath:
-            path: {{ .Values.mountContainerRuntimeSocket.dockerSockPath }}
-            type: Socket
-        - name: docker-certs
-          hostPath:
-            path: /etc/docker/certs.d
-            type: ""
-{{ end }}
-{{- if eq .Values.mountContainerRuntimeSocket.containerdSock "true" }}
-        - name: containerd-certs
-          hostPath:
-            path: /etc/containerd/certs.d
-            type: ""
-        - name: containerd-sock
-          hostPath:
-            path: {{ .Values.mountContainerRuntimeSocket.containerdSockPath }}
-            type: Socket
-{{ end }}
       containers:
         - name: deepfence-api
-          image: "{{ .Values.api.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.registry.imagePrefix }}{{ .Values.api.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.api.image.pullPolicy }}
           command: ["/app/code/dockerify/api/entrypoint.sh"]
           env:
@@ -128,19 +106,6 @@ spec:
                 configMapKeyRef:
                   name: "main-cm-{{ include "deepfence-console.fullname" . }}"
                   key: redis_port
-          volumeMounts:
-{{- if eq .Values.mountContainerRuntimeSocket.dockerSock "true" }}
-            - mountPath: {{ .Values.mountContainerRuntimeSocket.dockerSockPath }}
-              name: docker-sock
-            - mountPath: /etc/docker/certs.d
-              name: docker-certs
-{{ end }}
-{{- if eq .Values.mountContainerRuntimeSocket.containerdSock "true" }}
-            - mountPath: /etc/containerd/certs.d
-              name: containerd-certs
-            - mountPath: {{ .Values.mountContainerRuntimeSocket.containerdSockPath }}
-              name: containerd-sock
-{{ end }}
           ports:
             - name: http
               containerPort: 9998
@@ -158,18 +123,8 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- if .Values.topologyNodeAffinityHostName }}
       affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: name
-                    operator: In
-                    values:
-                      - deepfence-backend
-                      - deepfence-celery
-              topologyKey: kubernetes.io/hostname
-        {{- if .Values.topologyNodeAffinityHostName }}
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
@@ -178,7 +133,7 @@ spec:
                     operator: NotIn
                     values:
                       - "{{ .Values.topologyNodeAffinityHostName }}"
-        {{- end }}
+{{- end }}
       {{- with .Values.api.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}

@@ -551,16 +551,7 @@ spec:
                       - deepfence-api
                       - deepfence-celery
               topologyKey: kubernetes.io/hostname
-{{- if .Values.backendNodeAffinityHostName }}
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/hostname
-                    operator: In
-                    values:
-                      - "{{ .Values.backendNodeAffinityHostName }}"
-{{- else if .Values.topologyNodeAffinityHostName }}
+{{- if .Values.topologyNodeAffinityHostName }}
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:

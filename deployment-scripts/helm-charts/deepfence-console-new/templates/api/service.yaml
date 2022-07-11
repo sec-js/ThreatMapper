@@ -7,7 +7,7 @@ metadata:
     {{- include "deepfence-console.labels" . | nindent 4 }}
     app: deepfence-console
     name: deepfence-api
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   type:  {{ .Values.api.service.type }}
   selector:

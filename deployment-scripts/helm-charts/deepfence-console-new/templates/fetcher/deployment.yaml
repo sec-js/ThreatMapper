@@ -6,7 +6,7 @@ metadata:
     {{- include "deepfence-console.labels" . | nindent 4 }}
     app: deepfence-console
     name: deepfence-fetcher
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   {{- if not .Values.fetcher.autoscaling.enabled }}
   replicas: {{ .Values.fetcher.replicaCount }}
@@ -29,7 +29,7 @@ spec:
           emptyDir: {}
       containers:
         - name: deepfence-fetcher
-          image: "{{ .Values.fetcher.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.registry.imagePrefix }}{{ .Values.fetcher.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.fetcher.image.pullPolicy }}
           env:
             - name: POSTGRES_USER_DB_HOST

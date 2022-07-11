@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deepfence-backend
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "deepfence-console.labels" . | nindent 4 }}
     app: deepfence-console
@@ -43,7 +43,7 @@ spec:
           sysctl -w fs.file-max=1048576
       containers:
         - name: deepfence-backend
-          image: "{{ .Values.backend.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.registry.imagePrefix }}{{ .Values.backend.image.repository }}:{{ .Values.image.tag }}"
           command: ["/app/code/dockerify/backend/entrypoint.sh"]
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           env:
@@ -137,37 +137,14 @@ spec:
               containerPort: 4041
               protocol: TCP
           volumeMounts:
-{{- if eq .Values.mountContainerRuntimeSocket.dockerSock "true" }}
-            - mountPath: {{ .Values.mountContainerRuntimeSocket.dockerSockPath }}
-              name: docker-sock
-{{ end }}
             - mountPath: /data
               name: data
       {{- with .Values.backend.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- if .Values.topologyNodeAffinityHostName }}
       affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: name
-                    operator: In
-                    values:
-                      - deepfence-api
-                      - deepfence-celery
-              topologyKey: kubernetes.io/hostname
-{{- if .Values.backendNodeAffinityHostName }}
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/hostname
-                    operator: In
-                    values:
-                      - "{{ .Values.backendNodeAffinityHostName }}"
-{{- else if .Values.topologyNodeAffinityHostName }}
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
@@ -182,11 +159,5 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-{{- if eq .Values.mountContainerRuntimeSocket.dockerSock "true" }}
-        - name: docker-sock
-          hostPath:
-            path: {{ .Values.mountContainerRuntimeSocket.dockerSockPath }}
-            type: Socket
-{{ end }}
         - name: data
           emptyDir: {}

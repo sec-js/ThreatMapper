@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deepfence-topology
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "deepfence-console.labels" . | nindent 4 }}
     app: deepfence-console
@@ -74,7 +74,7 @@ spec:
                 configMapKeyRef:
                   name: "main-cm-{{ include "deepfence-console.fullname" . }}"
                   key: redis_port
-          image: "{{ .Values.topology.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.registry.imagePrefix }}{{ .Values.topology.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.topology.image.pullPolicy }}
           args:
             - topology

@@ -5,6 +5,7 @@
 # Set docker hub username and password provided by Deepfence
 registry:
   name: "https://index.docker.io/v1/"
+  imagePrefix: ""
   # Set docker hub username and password provided by Deepfence
   # This will create a secret called "deepfence-docker-secret"
   username: ""
@@ -27,7 +28,7 @@ image:
 tls:
   certFile: ""
   keyFile: ""
-# for SaaS deployments
+  # merged file (certificate + key)
   pemfile: ""
 
 # Configure port for browser / agents
@@ -87,7 +88,14 @@ agentServiceName: deepfence-router
 # Show console vm in management console UI
 runConsoleDiscovery: "true"
 
+# SaaS specific values
 saas_deployment: "false"
+saas_domain: ""
+cert_arn: ""
+env:
+  name: ""
+  clusterName: ""
+  lokiUrl: ""
 
 enableGraphReport: "true"
 
@@ -101,15 +109,8 @@ mountContainerRuntimeSocket:
 
 # Optionally set node affinity for topology pod
 topologyNodeAffinityHostName: ""
-# Optionally set node affinity for backend pod
-backendNodeAffinityHostName: ""
-
-enablePacketCaptureService: "true"
-
 
 serviceAccountName: deepfence-console
-
-namespace: default
 
 api:
   replicaCount: 1

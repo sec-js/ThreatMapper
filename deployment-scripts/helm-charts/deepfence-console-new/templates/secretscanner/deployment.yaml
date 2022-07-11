@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deepfence-secret-scaner
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "deepfence-console.labels" . | nindent 4 }}
     app: deepfence-console
@@ -26,7 +26,7 @@ spec:
         - name: {{ .Values.image.pullSecretName }}
       containers:
         - name: deepfence-secret-scanner
-          image: "{{ .Values.secretScanner.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.registry.imagePrefix }}{{ .Values.secretScanner.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.secretScanner.image.pullPolicy }}
           ports:
             - containerPort: 8011

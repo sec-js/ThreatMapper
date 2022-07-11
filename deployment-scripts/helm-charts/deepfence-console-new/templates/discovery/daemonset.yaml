@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: deepfence-discovery
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "deepfence-console.labels" . | nindent 4 }}
     app: deepfence-console
@@ -45,11 +45,11 @@ spec:
             type: Directory
       containers:
         - name: deepfence-discovery
-          image: "{{ .Values.discovery.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.registry.imagePrefix }}{{ .Values.discovery.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.discovery.image.pullPolicy }}
           args:
             - discovery
-            - deepfence-topology.default.svc.cluster.local
+            - deepfence-topology.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
           env:
             - name: DF_CLUSTER_NAME
               value: "{{ .Values.clusterName }}"

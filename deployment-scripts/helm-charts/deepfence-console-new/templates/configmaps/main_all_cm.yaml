@@ -10,6 +10,6 @@ data:
 kind: ConfigMap 
 metadata:
   name: "main-cm-{{ include "deepfence-console.fullname" . }}"
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "deepfence-console.labels" . | nindent 4 }}
