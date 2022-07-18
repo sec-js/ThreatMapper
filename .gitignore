@@ -1,3 +1,229 @@
-.idea
+.idea/*
 .DS_Store
 deepfence_agent/tools/apache/scope/proto/
+
+# From deepfence_agent
+*.pyc
+.project
+.pydevproject
+.vscode/
+
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+
+# Folders
+deepfence_agent/tools/apache/scope/_obj
+deepfence_agent/tools/apache/scope/_test
+deepfence_agent/tools/apache/scope/.vagrant
+deepfence_agent/tools/apache/scope/releases
+deepfence_agent/tools/apache/scope/tmp
+deepfence_agent/tools/apache/scope/.cache
+
+# Architecture specific extensions/prefixes
+deepfence_agent/tools/apache/scope/*.[568vq]
+deepfence_agent/tools/apache/scope/[568vq].out
+
+deepfence_agent/tools/apache/scope/*.cgo1.go
+deepfence_agent/tools/apache/scope/*.cgo2.c
+deepfence_agent/tools/apache/scope/_cgo_defun.c
+deepfence_agent/tools/apache/scope/_cgo_gotypes.go
+deepfence_agent/tools/apache/scope/_cgo_export.*
+
+deepfence_agent/tools/apache/scope/_testmain.go
+
+deepfence_agent/tools/apache/scope/*.exe
+deepfence_agent/tools/apache/scope/*.test
+deepfence_agent/tools/apache/scope/*.prof
+deepfence_agent/tools/apache/scope/profile.cov
+deepfence_agent/tools/apache/scope/coverage.html
+
+# Emacs backup files
+deepfence_agent/tools/apache/scope/*~
+
+# ctags files
+deepfence_agent/tools/apache/scope/tags
+
+# Project specific
+deepfence_agent/tools/apache/scope/.*.uptodate
+deepfence_agent/tools/apache/scope/.uptodate
+deepfence_agent/tools/apache/scope/scope.tar
+deepfence_agent/tools/apache/scope/cloud-agent.tar
+deepfence_agent/tools/apache/scope/.pkg
+deepfence_agent/tools/apache/scope/prog/scope
+deepfence_agent/tools/apache/scope/docker/scope
+deepfence_agent/tools/apache/scope/docker/docker.tgz
+deepfence_agent/tools/apache/scope/docker/docker
+deepfence_agent/tools/apache/scope/docker/weave
+deepfence_agent/tools/apache/scope/docker/weaveutil
+deepfence_agent/tools/apache/scope/docker/runsvinit
+deepfence_agent/tools/apache/scope/extras/fixprobe/fixprobe
+deepfence_agent/tools/apache/scope/extras/fixprobe/*.json
+deepfence_agent/tools/apache/scope/extras/copyreport/copyreport
+deepfence_agent/tools/apache/scope/*sublime-project
+deepfence_agent/tools/apache/scope/*sublime-workspace
+deepfence_agent/tools/apache/scope/*npm-debug.log
+deepfence_agent/tools/apache/scope/*yarn-error.log
+deepfence_agent/tools/apache/scope/app/static.go
+deepfence_agent/tools/apache/scope/vendor/github.com/ugorji/go/codec/codecgen/bin/*
+deepfence_agent/tools/apache/scope/*.codecgen.go
+deepfence_agent/tools/apache/scope/client/build-external/*
+deepfence_agent/tools/apache/scope/prog/staticui/staticui.go
+deepfence_agent/tools/apache/scope/prog/externalui/externalui.go
+deepfence_agent/tools/apache/scope/client/build-pkg
+deepfence_agent/tools/apache/scope/client/bundle
+deepfence_agent/tools/apache/scope/client/.yarnrc
+
+# Website
+deepfence_agent/tools/apache/scope/site-build
+
+# From deepfence-backend
+*.swp
+cloud_detect/steampipe-plugins/
+
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# IPython Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# dotenv
+.env
+
+# virtualenv
+venv/
+ENV/
+
+# Spyder project settings
+.spyderproject
+
+# Rope project settings
+.ropeproject
+### VirtualEnv template
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+.Python
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+.venv
+pip-selfcheck.json
+### JetBrains template
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+## File-based project format:
+*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+/out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# From deepfence_console
+deepfence_console/deepfence_backend
+deepfence_console/deepfence_ui
+deepfence_console/deepfence_diagnosis
+deepfence_console/deepaudit/deepaudit
+
+# From deepfence_diagnosis
+deepfence_diagnosis/diagnosis
+
+# From deepfence_ui
+node_modules
+build/
+coverage/
+test/*png
+
+# CMake
+cmake-build-debug/
+
+# Webpack bundle stats
+bundle-stats.json
