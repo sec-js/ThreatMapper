@@ -34,7 +34,6 @@ const (
 var (
 	postgresDb                   *sql.DB
 	psqlInfo                     string
-	redisPool                    *redis.Pool
 	esClient                     *elastic.Client
 	vulnerabilityDbUpdater       *VulnerabilityDbUpdater
 	cveIndexName                 = convertRootESIndexToCustomerSpecificESIndex("cve")
@@ -1390,6 +1389,11 @@ func newRedisPool() *redis.Pool {
 			}
 			return c, err
 		},
+		IdleTimeout: 240 * time.Second,
+		TestOnBorrow: func(c redis.Conn, t time.Time) error {
+			_, err := c.Do("PING")
+			return err
+		},
 	}
 }
 
@@ -1421,7 +1425,7 @@ func logging(logger *log.Logger) func(http.Handler) http.Handler {
 
 func main() {
 	var err error
-	redisPool = newRedisPool()
+	//redisPool = newRedisPool()
 	postgresPort := 5432
 	postgresPortStr := os.Getenv("POSTGRES_USER_DB_PORT")
 	if postgresPortStr != "" {
@@ -1491,6 +1495,11 @@ func main() {
 	httpMux.HandleFunc("/vulnerability-db/listing.json", vulnerabilityDbListing)
 	httpMux.HandleFunc("/df-api/upload-vulnerability-db", handleVulnerabilityFeedTarUpload)
 
+	// Health Check
+	httpMux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("{\"status\":\"Healthy\"}"))
+	})
 	fmt.Println("fetcher server is starting")
 
 	logger := log.New(os.Stdout, "fetcher-server: ", log.LstdFlags)
